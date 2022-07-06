@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
@@ -10,12 +11,7 @@ use serde_json::Value;
 use crate::util;
 
 pub fn make_api_call() {
-    let slash_separator = "/";
-    let parameters_start = "?";
-    let parameter_equals = "=";
-    let key_parameter = "key";
 
-    let steam_api_url = "https://api.steampowered.com";
 
     println!("Interface: ISteamApps");
     let mut interface = "ISteamApps";
@@ -24,11 +20,9 @@ pub fn make_api_call() {
     let mut method = "GetAppList";
     let mut version = "v2";
 
-    let steam_web_api_key = util::getSteamWebAPIKey();
+    let mut parameters : HashMap<String, String> = HashMap::new();
 
-    let url = [steam_api_url, slash_separator, interface, slash_separator, method, slash_separator, version, parameters_start, key_parameter, parameter_equals, &steam_web_api_key].join("");
-    println!("Request URL {}", url);
-
+    let url = util::build_api_url(interface, method, version, parameters);
 
     let response = minreq::get(url).send();
     let raw_response : Vec<u8> = response.unwrap().into_bytes();
