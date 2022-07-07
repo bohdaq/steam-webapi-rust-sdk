@@ -17,5 +17,5 @@ pub mod ISteamApps;
 fn main() {
     println!("Steam Web API Rust SDK");
 
-    ISteamApps::GetAppList::make_api_call();
+    ISteamApps::GetAppList::get();
 }

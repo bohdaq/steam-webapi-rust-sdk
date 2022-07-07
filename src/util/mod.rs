@@ -23,7 +23,7 @@ pub fn build_api_url(interface: &str, method: &str, version: &str, parameters: H
     let key_parameter = "key";
 
     let steam_api_url = "https://api.steampowered.com";
-    
+
     let steam_web_api_key = get_steam_web_api_key();
 
     let url = [steam_api_url, slash_separator, interface, slash_separator, method, slash_separator, version, parameters_start, key_parameter, parameter_equals, &steam_web_api_key].join("");

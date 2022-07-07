@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
-struct SteamApp {
+pub struct SteamApp {
     appid: i64,
     name: String,
 }
@@ -10,7 +10,12 @@ struct SteamApp {
 use serde_json::Value;
 use crate::util;
 
-pub fn make_api_call() {
+pub fn get() -> Vec<SteamApp> {
+    let api_response = make_api_call();
+    parse_api_call_result(api_response)
+}
+
+pub fn make_api_call() -> String {
 
 
     println!("Interface: ISteamApps");
@@ -29,6 +34,10 @@ pub fn make_api_call() {
     let response_string = String::from_utf8(raw_response).unwrap();
     println!("{}", response_string);
 
+    response_string
+}
+
+pub fn parse_api_call_result(response_string: String) -> Vec<SteamApp> {
     let mut json: Value = serde_json::from_str(&response_string).unwrap();
 
     let mut applist = json["applist"].take();
@@ -40,6 +49,6 @@ pub fn make_api_call() {
     let list : Vec<SteamApp> = serde_json::from_value(apps).unwrap();
     println!("{}, apps number", list.len());
 
-    let index = list.len() - 1;
-    println!("{}, app", list.get(index).unwrap().name);
+
+    list
 }
