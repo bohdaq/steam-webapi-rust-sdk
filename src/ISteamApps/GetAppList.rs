@@ -3,8 +3,8 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct SteamApp {
-    appid: i64,
-    name: String,
+    pub(crate) appid: i64,
+    pub(crate) name: String,
 }
 
 use serde_json::Value;
@@ -16,8 +16,6 @@ pub fn get() -> Vec<SteamApp> {
 }
 
 pub fn make_api_call() -> String {
-
-
     println!("Interface: ISteamApps");
     let mut interface = "ISteamApps";
 
@@ -32,7 +30,7 @@ pub fn make_api_call() -> String {
     let response = minreq::get(url).send();
     let raw_response : Vec<u8> = response.unwrap().into_bytes();
     let response_string = String::from_utf8(raw_response).unwrap();
-    println!("{}", response_string);
+    // println!("{}", response_string);
 
     response_string
 }
@@ -41,14 +39,18 @@ pub fn parse_api_call_result(response_string: String) -> Vec<SteamApp> {
     let mut json: Value = serde_json::from_str(&response_string).unwrap();
 
     let mut applist = json["applist"].take();
-    println!("{}, applist", applist);
+    // println!("{}, applist", applist);
 
     let mut apps : Value = applist["apps"].take();
-    println!("{}, apps", apps);
+    // println!("{}, apps", apps);
 
     let list : Vec<SteamApp> = serde_json::from_value(apps).unwrap();
-    println!("{}, apps number", list.len());
 
+    let filtered_list = list
+                            .into_iter()
+                            .filter(|steam_app| steam_app.name != "")
+                            .collect();
+    // println!("{}, apps number", list.len());
 
-    list
+    filtered_list
 }
