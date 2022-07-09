@@ -4,6 +4,7 @@ use crate::isteam_apps::get_app_list::get;
 use crate::isteam_apps::get_app_list::get_cached;
 use crate::isteam_apps::get_app_list::get_resource_filepath;
 use std::fs::metadata;
+use std::time::UNIX_EPOCH;
 
 #[test]
 fn test_make_api_call() {
@@ -29,7 +30,9 @@ fn test_get() {
     let mut cache_timestamp = 0;
     let boxed_metadata = metadata(get_resource_filepath());
     if boxed_metadata.is_ok() {
-        cache_timestamp = boxed_metadata.unwrap().modified().unwrap().elapsed().unwrap().as_millis();
+        let system_time = boxed_metadata.unwrap().modified().unwrap();
+        let since_the_epoch = system_time.duration_since(UNIX_EPOCH).expect("Time went backwards");
+        cache_timestamp = since_the_epoch.as_secs() * 1000 + since_the_epoch.subsec_nanos() as u64 / 1_000_000;
     }
 
     let steam_app_list = get();
@@ -43,10 +46,12 @@ fn test_get() {
     let mut latest_cache_timestamp = 0;
     let boxed_metadata = metadata(get_resource_filepath());
     if boxed_metadata.is_ok() {
-        latest_cache_timestamp = boxed_metadata.unwrap().modified().unwrap().elapsed().unwrap().as_millis();
+        let system_time = boxed_metadata.unwrap().modified().unwrap();
+        let since_the_epoch = system_time.duration_since(UNIX_EPOCH).expect("Time went backwards");
+        latest_cache_timestamp = since_the_epoch.as_secs() * 1000 + since_the_epoch.subsec_nanos() as u64 / 1_000_000;
     }
 
-    let cache_is_updated = latest_cache_timestamp < cache_timestamp;
+    let cache_is_updated = latest_cache_timestamp > cache_timestamp;
     assert!(cache_is_updated);
 }
 
