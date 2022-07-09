@@ -1,7 +1,6 @@
 use crate::ISteamApps::GetAppList;
 use crate::ISteamApps::GetAppList::make_api_call;
 use crate::ISteamApps::GetAppList::parse_api_call_result;
-use crate::util::get_steam_web_api_key;
 
 #[test]
 fn test_make_api_call() {

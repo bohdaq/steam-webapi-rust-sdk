@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use std::env;
-use std::iter::Map;
 
 pub fn get_steam_web_api_key() -> String {
     let boxed_steam_web_api_key = env::var("STEAM_WEBAPI_KEY");
@@ -16,7 +15,7 @@ pub fn get_steam_web_api_key() -> String {
     return steam_web_api_key;
 }
 
-pub fn build_api_url(interface: &str, method: &str, version: &str, parameters: HashMap<String, String>) -> String {
+pub fn build_api_url(interface: &str, method: &str, version: &str, _parameters: HashMap<String, String>) -> String {
     let slash_separator = "/";
     let parameters_start = "?";
     let parameter_equals = "=";

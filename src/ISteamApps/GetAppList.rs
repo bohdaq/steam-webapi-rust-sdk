@@ -13,7 +13,6 @@ use std::fs;
 use std::fs::{File, read_to_string};
 use std::io::Write;
 use std::path::Path;
-use crate::ISteamApps::GetAppList;
 use crate::util::get_cache_dir_path;
 
 pub fn get() -> Vec<SteamApp> {
@@ -55,16 +54,11 @@ pub fn get_json_filetype() -> String {
 }
 
 pub fn make_api_call() -> String {
-    let mut interface = ISteamApps::get_interface();
-    println!("Interface: {}", interface);
-
+    let interface = ISteamApps::get_interface();
     let  method = get_method_name();
-    println!("Method: {}", method);
-
     let  version = get_version();
-    println!("Version: {}", version);
 
-    let mut parameters : HashMap<String, String> = HashMap::new();
+    let parameters : HashMap<String, String> = HashMap::new();
 
     let url = util::build_api_url(interface.as_str(), method.as_str(), version.as_str(), parameters);
 
@@ -96,7 +90,7 @@ pub fn parse_api_call_result(response_string: String) -> Vec<SteamApp> {
 
     let mut applist = json["applist"].take();
 
-    let mut apps : Value = applist["apps"].take();
+    let apps : Value = applist["apps"].take();
 
     let list : Vec<SteamApp> = serde_json::from_value(apps).unwrap();
 
