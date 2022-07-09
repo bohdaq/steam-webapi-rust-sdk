@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::env;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 pub fn get_steam_web_api_key() -> String {
     let boxed_steam_web_api_key = env::var("STEAM_WEBAPI_KEY");
@@ -35,4 +36,10 @@ pub fn get_root_dir_path() -> String {
 pub fn get_cache_dir_path() -> String {
     let root_path  = get_root_dir_path();
     [root_path, "cache".to_string()].join("/")
+}
+
+pub fn as_unix_timestamp(system_time: SystemTime) -> u64 {
+    let since_the_epoch = system_time.duration_since(UNIX_EPOCH).expect("Time went backwards");
+    let unix_timestamp = since_the_epoch.as_secs() * 1000 + since_the_epoch.subsec_nanos() as u64 / 1_000_000;
+    unix_timestamp
 }
