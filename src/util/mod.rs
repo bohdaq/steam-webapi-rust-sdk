@@ -10,8 +10,6 @@ pub fn get_steam_web_api_key() -> String {
     let steam_web_api_key = boxed_steam_web_api_key.unwrap();
     let _key = ["STEAM_WEB_API_KEY is ", &steam_web_api_key].join("");
 
-    println!("{}", _key);
-
     return steam_web_api_key;
 }
 
@@ -26,7 +24,6 @@ pub fn build_api_url(interface: &str, method: &str, version: &str, _parameters: 
     let steam_web_api_key = get_steam_web_api_key();
 
     let url = [steam_api_url, slash_separator, interface, slash_separator, method, slash_separator, version, parameters_start, key_parameter, parameter_equals, &steam_web_api_key].join("");
-    println!("Request URL {}", url);
 
     return url
 }

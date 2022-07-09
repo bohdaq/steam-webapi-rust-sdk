@@ -8,7 +8,7 @@ pub struct SteamApp {
 }
 
 use serde_json::Value;
-use crate::{ISteamApps, util};
+use crate::{isteam_apps, util};
 use std::fs;
 use std::fs::{File, read_to_string};
 use std::io::Write;
@@ -21,7 +21,7 @@ pub fn get() -> Vec<SteamApp> {
 }
 
 pub fn get_cached() -> Vec<SteamApp> {
-    let  interface = ISteamApps::get_interface();
+    let  interface = isteam_apps::get_interface();
     let  method = get_method_name();
     let  version = get_version();
 
@@ -35,7 +35,7 @@ pub fn get_cached() -> Vec<SteamApp> {
         let cached_api_response = boxed_read.unwrap();
         parse_api_call_result(cached_api_response)
     } else {
-        println!("{} {} {} unable to read from cache, invoking api", ISteamApps::get_interface(), get_method_name(), get_version());
+        println!("{} {} {} unable to read from cache, invoking api", isteam_apps::get_interface(), get_method_name(), get_version());
         get()
     }
 
@@ -54,7 +54,7 @@ pub fn get_json_filetype() -> String {
 }
 
 pub fn make_api_call() -> String {
-    let interface = ISteamApps::get_interface();
+    let interface = isteam_apps::get_interface();
     let  method = get_method_name();
     let  version = get_version();
 

@@ -12,10 +12,10 @@
 
 
 pub mod util;
-pub mod ISteamApps;
+pub mod isteam_apps;
 
 fn main() {
     println!("Steam Web API Rust SDK");
 
-    ISteamApps::GetAppList::get();
+    isteam_apps::get_app_list::get();
 }
