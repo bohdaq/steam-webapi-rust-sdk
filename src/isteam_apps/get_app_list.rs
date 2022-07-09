@@ -21,13 +21,7 @@ pub fn get() -> Vec<SteamApp> {
 }
 
 pub fn get_cached() -> Vec<SteamApp> {
-    let  interface = isteam_apps::get_interface();
-    let  method = get_method_name();
-    let  version = get_version();
-
-    let resource = [interface, method, version, get_json_filetype()].join("-");
-
-    let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
+    let filepath = get_resource_filepath();
 
     let boxed_read = read_to_string(filepath);
     let is_readable = boxed_read.is_ok();
@@ -53,25 +47,39 @@ pub fn get_json_filetype() -> String {
     "json".to_string()
 }
 
-pub fn make_api_call() -> String {
-    let interface = isteam_apps::get_interface();
+pub fn get_resource_filepath() -> String {
+    let  interface = isteam_apps::get_interface();
     let  method = get_method_name();
     let  version = get_version();
 
+    let resource = [interface, method, version, get_json_filetype()].join("-");
+
+    let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
+
+    filepath
+}
+
+pub fn get_api_url() -> String {
+    let  interface = isteam_apps::get_interface();
+    let  method = get_method_name();
+    let  version = get_version();
     let parameters : HashMap<String, String> = HashMap::new();
 
-    let url = util::build_api_url(interface.as_str(), method.as_str(), version.as_str(), parameters);
+    let api_url = util::build_api_url(interface.as_str(), method.as_str(), version.as_str(), parameters);
+
+    api_url
+}
+
+pub fn make_api_call() -> String {
+    let url = get_api_url();
 
     let response = minreq::get(url).send();
     let raw_response : Vec<u8> = response.unwrap().into_bytes();
     let response_string = String::from_utf8(raw_response).unwrap();
 
-    let resource = [interface, method, version, get_json_filetype()].join("-");
+    let filepath = get_resource_filepath();
 
     let mut file: File;
-    let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
-
-
     let directory_exists = Path::new(get_cache_dir_path().as_str()).is_dir();
     if !directory_exists {
         fs::create_dir_all(get_cache_dir_path()).unwrap();
