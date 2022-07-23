@@ -15,18 +15,26 @@ pub struct SteamAppDetails {
     pub(crate) website: String,
 }
 
-pub fn get(app_id: i64) -> SteamAppDetails {
+pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     println!("appdetails for {}", app_id);
-    let api_response = make_api_call(app_id);
-    parse_api_call_result(api_response, app_id)
+    let api_response_boxed = make_api_call(app_id);
+    if api_response_boxed.is_err() {
+        return Err(api_response_boxed.err().unwrap().to_string());
+    } else {
+        parse_api_call_result(api_response_boxed.unwrap(), app_id)
+    }
 }
 
-pub fn make_api_call(app_id: i64) -> String {
+pub fn make_api_call(app_id: i64) -> Result<String, String> {
     let url = get_api_url(app_id);
 
     let response = minreq::get(url).send();
     let raw_response : Vec<u8> = response.unwrap().into_bytes();
-    let response_string = String::from_utf8(raw_response).unwrap();
+    let response_string_boxed = String::from_utf8(raw_response);
+    if response_string_boxed.is_err() {
+        return Err(response_string_boxed.err().unwrap().to_string());
+    }
+    let response_string: String = response_string_boxed.unwrap();
 
     let filepath = get_resource_filepath(app_id);
 
@@ -41,7 +49,7 @@ pub fn make_api_call(app_id: i64) -> String {
 
     file.write_all(response_string.as_ref()).unwrap();
 
-    response_string
+    Ok(response_string)
 }
 
 pub fn get_api_url(appId: i64) -> String {
@@ -64,7 +72,7 @@ pub fn get_json_filetype() -> String {
     "json".to_string()
 }
 
-pub fn parse_api_call_result(response_string: String, app_id: i64) -> SteamAppDetails {
+pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<SteamAppDetails, String> {
     let mut steam_app_details = SteamAppDetails {
         app_id: app_id,
         detailed_description: "".to_string(),
@@ -74,7 +82,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> SteamAppDe
     };
 
     if response_string.len() > 0 {
-        let mut json: Value = serde_json::from_str(&response_string).unwrap();
+        let boxed_initial_parse = serde_json::from_str(&response_string);
+        if boxed_initial_parse.is_err() {
+            return Err(boxed_initial_parse.err().unwrap().to_string());
+        }
+        let mut json: Value = boxed_initial_parse.unwrap();
 
         let mut app_details_wrapped = json[app_id.to_string()].take();
 
@@ -107,5 +119,5 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> SteamAppDe
         println!("steam_app_details: {}", steam_app_details.detailed_description);
     }
 
-    steam_app_details
+    Ok(steam_app_details)
 }
