@@ -11,6 +11,8 @@
 // https://cdn.dota2.com/apps/dota2/images/heroes/dark_willow_full.png
 
 
+use std::{thread, time};
+
 pub mod util;
 pub mod isteam_apps;
 pub mod store_steampowered_com;
@@ -20,13 +22,31 @@ fn main() {
 
     let app_list = isteam_apps::get_app_list::get();
     for app in app_list {
-        let boxed_result = store_steampowered_com::appdetails::get(app.appid);
-        if boxed_result.is_ok() {
-            println!("result is ok")
-        } else {
-            println!("result is not ok")
-        }
+        get_app_details(app.appid)
     }
+}
+
+fn get_app_details(app_id: i64) {
+    let boxed_result = store_steampowered_com::appdetails::get(app_id);
+    if boxed_result.is_ok() {
+        let app_details = boxed_result.unwrap();
+        println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
+
+    } else {
+        let error_message = boxed_result.err().unwrap();
+        let is_not_steam_unsuccessful_response = error_message != "steampowered api returned failed response";
+        println!("{} {}", error_message, app_id);
+
+        if is_not_steam_unsuccessful_response {
+            println!("result is not ok for app id {}, retry in 1 min ", app_id);
+
+            let one_minute = time::Duration::from_secs(60);
+            thread::sleep(one_minute);
+
+            get_app_details(app_id);
+        }
 
 
+
+    }
 }
