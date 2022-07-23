@@ -20,7 +20,12 @@ fn main() {
 
     let app_list = isteam_apps::get_app_list::get();
     for app in app_list {
-        store_steampowered_com::appdetails::get(app.appid);
+        let boxed_result = store_steampowered_com::appdetails::get(app.appid);
+        if boxed_result.is_ok() {
+            println!("result is ok")
+        } else {
+            println!("result is not ok")
+        }
     }
 
 

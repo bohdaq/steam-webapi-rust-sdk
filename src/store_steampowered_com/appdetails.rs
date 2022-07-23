@@ -36,19 +36,6 @@ pub fn make_api_call(app_id: i64) -> Result<String, String> {
     }
     let response_string: String = response_string_boxed.unwrap();
 
-    let filepath = get_resource_filepath(app_id);
-
-    let mut file: File;
-    let directory_exists = Path::new(get_cache_dir_path().as_str()).is_dir();
-    if !directory_exists {
-        fs::create_dir_all(get_cache_dir_path()).unwrap();
-        file = File::create(filepath).unwrap();
-    } else {
-        file = File::create(filepath).unwrap();
-    }
-
-    file.write_all(response_string.as_ref()).unwrap();
-
     Ok(response_string)
 }
 
@@ -90,6 +77,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
         let mut app_details_wrapped = json[app_id.to_string()].take();
 
+        let mut is_success = app_details_wrapped["success".to_string()].take();
+        if is_success.take().as_bool().unwrap() == false {
+            return Err("steampowered api returned failed response".to_string());
+        }
+
         let mut app_details : Value = app_details_wrapped["data"].take();
 
         let boxed_reviews = app_details["reviews"].take();
@@ -118,6 +110,19 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
         println!("steam_app_details: {}", steam_app_details.detailed_description);
     }
+
+    let filepath = get_resource_filepath(app_id);
+
+    let mut file: File;
+    let directory_exists = Path::new(get_cache_dir_path().as_str()).is_dir();
+    if !directory_exists {
+        fs::create_dir_all(get_cache_dir_path()).unwrap();
+        file = File::create(filepath).unwrap();
+    } else {
+        file = File::create(filepath).unwrap();
+    }
+
+    file.write_all(response_string.as_ref()).unwrap();
 
     Ok(steam_app_details)
 }
