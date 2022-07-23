@@ -16,6 +16,7 @@ use std::path::Path;
 use crate::util::get_cache_dir_path;
 
 pub fn get() -> Vec<SteamApp> {
+    println!("getting app list");
     let api_response = make_api_call();
     parse_api_call_result(api_response)
 }

@@ -8,6 +8,7 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct SteamAppDetails {
+    pub(crate) app_id: i64,
     pub(crate) detailed_description: String,
     pub(crate) reviews: String,
     pub(crate) header_image: String,
@@ -71,14 +72,30 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> SteamAppDe
     let mut app_details : Value = app_details_wrapped["data"].take();
 
     let boxed_reviews = app_details["reviews"].take();
+    let boxed_detailed_description = app_details["detailed_description"].take();
+    let boxed_header_image = app_details["header_image"].take();
+    let boxed_website = app_details["website"].take();
 
 
     let mut steam_app_details = SteamAppDetails {
-        detailed_description: app_details["detailed_description"].take().as_str().unwrap().to_string(),
+        app_id: app_id,
+        detailed_description: "".to_string(),
         reviews: "".to_string(),
-        header_image: app_details["header_image"].take().as_str().unwrap().to_string(),
-        website: app_details["website"].take().as_str().unwrap().to_string(),
+        header_image: "".to_string(),
+        website: "".to_string(),
     };
+
+    if boxed_website.as_str().is_some() {
+        steam_app_details.website = boxed_website.as_str().unwrap().to_string();
+    }
+
+    if boxed_header_image.as_str().is_some() {
+        steam_app_details.header_image = boxed_header_image.as_str().unwrap().to_string();
+    }
+
+    if boxed_detailed_description.as_str().is_some() {
+        steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
+    }
 
     if boxed_reviews.as_str().is_some() {
         steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
