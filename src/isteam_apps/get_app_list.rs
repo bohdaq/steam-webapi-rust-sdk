@@ -53,7 +53,7 @@ pub fn get_resource_filepath() -> String {
     let  method = get_method_name();
     let  version = get_version();
 
-    let resource = [interface, method, version, get_json_filetype()].join("-");
+    let resource = [interface, "-".to_string(), method, "-".to_string(), version, ".".to_string(), get_json_filetype()].join("");
 
     let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
 

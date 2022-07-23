@@ -53,7 +53,7 @@ pub fn get_resource_filepath(app_id: i64) -> String {
     let  interface = "steampowered";
     let  method = "appdetails";
 
-    let resource = [interface, method, app_id.to_string().as_str(), get_json_filetype().as_str()].join("-");
+    let resource = [interface, "-".to_string().as_str(), method, "-".to_string().as_str(),  app_id.to_string().as_str(), ".".to_string().as_str(), get_json_filetype().as_str()].join("");
 
     let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
 
@@ -65,18 +65,6 @@ pub fn get_json_filetype() -> String {
 }
 
 pub fn parse_api_call_result(response_string: String, app_id: i64) -> SteamAppDetails {
-    let mut json: Value = serde_json::from_str(&response_string).unwrap();
-
-    let mut app_details_wrapped = json[app_id.to_string()].take();
-
-    let mut app_details : Value = app_details_wrapped["data"].take();
-
-    let boxed_reviews = app_details["reviews"].take();
-    let boxed_detailed_description = app_details["detailed_description"].take();
-    let boxed_header_image = app_details["header_image"].take();
-    let boxed_website = app_details["website"].take();
-
-
     let mut steam_app_details = SteamAppDetails {
         app_id: app_id,
         detailed_description: "".to_string(),
@@ -85,23 +73,39 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> SteamAppDe
         website: "".to_string(),
     };
 
-    if boxed_website.as_str().is_some() {
-        steam_app_details.website = boxed_website.as_str().unwrap().to_string();
-    }
+    if response_string.len() > 0 {
+        let mut json: Value = serde_json::from_str(&response_string).unwrap();
 
-    if boxed_header_image.as_str().is_some() {
-        steam_app_details.header_image = boxed_header_image.as_str().unwrap().to_string();
-    }
+        let mut app_details_wrapped = json[app_id.to_string()].take();
 
-    if boxed_detailed_description.as_str().is_some() {
-        steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
-    }
+        let mut app_details : Value = app_details_wrapped["data"].take();
 
-    if boxed_reviews.as_str().is_some() {
-        steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
-    }
+        let boxed_reviews = app_details["reviews"].take();
+        let boxed_detailed_description = app_details["detailed_description"].take();
+        let boxed_header_image = app_details["header_image"].take();
+        let boxed_website = app_details["website"].take();
 
-    println!("steam_app_details: {}", steam_app_details.detailed_description);
+
+
+
+        if boxed_website.as_str().is_some() {
+            steam_app_details.website = boxed_website.as_str().unwrap().to_string();
+        }
+
+        if boxed_header_image.as_str().is_some() {
+            steam_app_details.header_image = boxed_header_image.as_str().unwrap().to_string();
+        }
+
+        if boxed_detailed_description.as_str().is_some() {
+            steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
+        }
+
+        if boxed_reviews.as_str().is_some() {
+            steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
+        }
+
+        println!("steam_app_details: {}", steam_app_details.detailed_description);
+    }
 
     steam_app_details
 }
