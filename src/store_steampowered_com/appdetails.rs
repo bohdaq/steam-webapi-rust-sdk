@@ -29,8 +29,12 @@ pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
 pub fn make_api_call(app_id: i64) -> Result<String, String> {
     let url = get_api_url(app_id);
 
-    let response = minreq::get(url).send();
-    let raw_response : Vec<u8> = response.unwrap().into_bytes();
+    let boxed_response = minreq::get(url).send();
+    if boxed_response.is_err() {
+        return Err("Operation timed out (API call)".to_string());
+    }
+
+    let raw_response : Vec<u8> = boxed_response.unwrap().into_bytes();
     let response_string_boxed = String::from_utf8(raw_response);
     if response_string_boxed.is_err() {
         return Err(response_string_boxed.err().unwrap().to_string());
