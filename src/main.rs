@@ -21,13 +21,21 @@ fn main() {
     println!("Steam Web API Rust SDK");
 
     let app_list = isteam_apps::get_app_list::get_cached();
+    let mut iteration_number = 1;
+    let app_list_size = app_list.len();
+
+
     for app in app_list {
-        get_app_details(app.appid)
+        let calculated_percentage = (100_f32 * iteration_number as f32) / app_list_size as f32;
+
+
+        println!("\n\n Iteration number: {} \n App List size:    {}  {}%", iteration_number, app_list_size, calculated_percentage);
+        get_app_details(app.appid);
+        iteration_number = iteration_number + 1;
     }
 }
 
 fn get_app_details(app_id: i64) {
-    println!("\n\n");
     let boxed_result = store_steampowered_com::appdetails::get_cached(app_id);
     if boxed_result.is_ok() {
         let app_details = boxed_result.unwrap();
