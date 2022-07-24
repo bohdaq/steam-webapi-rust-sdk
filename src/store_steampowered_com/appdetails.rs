@@ -1,5 +1,5 @@
 use std::fs;
-use std::fs::File;
+use std::fs::{File, read_to_string};
 use std::path::Path;
 use std::io::Write;
 use serde_json::Value;
@@ -24,6 +24,22 @@ pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     } else {
         parse_api_call_result(api_response_boxed.unwrap(), app_id)
     }
+}
+
+pub fn get_cached(app_id: i64) -> Result<SteamAppDetails, String> {
+    let filepath = get_resource_filepath(app_id);
+    println!("{}", &filepath);
+
+    let boxed_read = read_to_string(filepath);
+    let is_readable = boxed_read.is_ok();
+    if is_readable {
+        let cached_api_response = boxed_read.unwrap();
+        parse_api_call_result(cached_api_response, app_id)
+    } else {
+        println!("unable to read from cache, invoking api");
+        get(app_id)
+    }
+
 }
 
 pub fn make_api_call(app_id: i64) -> Result<String, String> {
@@ -126,7 +142,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
         }
 
-        println!("steam_app_details: {}", steam_app_details.detailed_description);
+        // println!("steam_app_details: {}", steam_app_details.detailed_description);
     }
 
     let filepath = get_resource_filepath(app_id);

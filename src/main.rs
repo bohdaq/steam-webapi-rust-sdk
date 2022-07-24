@@ -27,7 +27,8 @@ fn main() {
 }
 
 fn get_app_details(app_id: i64) {
-    let boxed_result = store_steampowered_com::appdetails::get(app_id);
+    println!("\n\n");
+    let boxed_result = store_steampowered_com::appdetails::get_cached(app_id);
     if boxed_result.is_ok() {
         let app_details = boxed_result.unwrap();
         println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
