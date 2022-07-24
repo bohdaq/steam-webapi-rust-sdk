@@ -35,12 +35,19 @@ pub fn make_api_call(app_id: i64) -> Result<String, String> {
     }
 
     let raw_response : Vec<u8> = boxed_response.unwrap().into_bytes();
+    println!("raw_response length {}", raw_response.len());
+
     let response_string_boxed = String::from_utf8(raw_response);
     if response_string_boxed.is_err() {
-        return Err(response_string_boxed.err().unwrap().to_string());
+        let error_message = response_string_boxed.err().unwrap().to_string();
+        println!("{}", &error_message);
+        if error_message == "invalid utf-8 sequence of 1 bytes from index 1" {
+            return Err("no response from API".to_string());
+        }
+        return Err("invalid utf-8 sequence".to_string());
     }
     let response_string: String = response_string_boxed.unwrap();
-    println!("make_api_call response_string {} {}", response_string.len(), response_string);
+    println!("make_api_call response_string {}", response_string.len());
 
     Ok(response_string)
 }

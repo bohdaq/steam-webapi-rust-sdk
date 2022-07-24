@@ -20,7 +20,7 @@ pub mod store_steampowered_com;
 fn main() {
     println!("Steam Web API Rust SDK");
 
-    let app_list = isteam_apps::get_app_list::get();
+    let app_list = isteam_apps::get_app_list::get_cached();
     for app in app_list {
         get_app_details(app.appid)
     }
@@ -34,10 +34,13 @@ fn get_app_details(app_id: i64) {
 
     } else {
         let error_message = boxed_result.err().unwrap();
-        let is_not_steam_unsuccessful_response = error_message != "steampowered api returned failed response";
         println!("{} {}", error_message, app_id);
 
-        if is_not_steam_unsuccessful_response {
+        let is_not_steam_unsuccessful_response = error_message != "steampowered api returned failed response";
+        let is_not_invalid_utf8_sequence = error_message != "invalid utf-8 sequence";
+        let no_response_from_api = error_message == "no response from API";
+
+        if (is_not_steam_unsuccessful_response && is_not_invalid_utf8_sequence) || no_response_from_api {
             println!("result is not ok for app id {}, retry in 1 min ", app_id);
 
             let one_minute = time::Duration::from_secs(60);
