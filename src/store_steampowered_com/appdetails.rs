@@ -3,8 +3,8 @@ use std::fs::{File, read_to_string};
 use std::path::Path;
 use std::io::Write;
 use serde_json::Value;
-use crate::util::get_cache_dir_path;
 use serde::Deserialize;
+use crate::util::get_root_dir_path;
 
 #[derive(Deserialize, Debug)]
 pub struct SteamAppDetails {
@@ -74,13 +74,13 @@ pub fn get_api_url(appId: i64) -> String {
 }
 
 pub fn get_resource_filepath(app_id: i64) -> String {
-    let  interface = "steampowered";
-    let  method = "appdetails";
-
-    let resource = [interface, "-".to_string().as_str(), method, "-".to_string().as_str(),  app_id.to_string().as_str(), ".".to_string().as_str(), get_json_filetype().as_str()].join("");
-
-    let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
-
+    let cache_dir = get_cache_dir_path(app_id);
+    let filepath = [
+        cache_dir,
+        app_id.to_string(),
+        ".".to_string(),
+        get_json_filetype(),
+    ].join("");
     filepath
 }
 
@@ -148,9 +148,9 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
     let filepath = get_resource_filepath(app_id);
 
     let mut file: File;
-    let directory_exists = Path::new(get_cache_dir_path().as_str()).is_dir();
+    let directory_exists = Path::new(get_cache_dir_path(app_id).as_str()).is_dir();
     if !directory_exists {
-        fs::create_dir_all(get_cache_dir_path()).unwrap();
+        fs::create_dir_all(get_cache_dir_path(app_id)).unwrap();
         file = File::create(filepath).unwrap();
     } else {
         file = File::create(filepath).unwrap();
@@ -159,4 +159,27 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
     file.write_all(response_string.as_ref()).unwrap();
 
     Ok(steam_app_details)
+}
+
+pub fn get_cache_dir_path(app_id: i64) -> String {
+    let root_path  = get_root_dir_path();
+    let  interface = "steampowered";
+    let  method = "appdetails";
+    let number_of_entries_per_bucket = 10000;
+    let bucket = app_id / number_of_entries_per_bucket;
+
+    [
+        root_path,
+        "/".to_string(),
+        "cache".to_string(),
+        "/".to_string(),
+        interface.to_string(),
+        "/".to_string(),
+        method.to_string(),
+        "/".to_string(),
+        bucket.to_string(),
+        "/".to_string(),
+        app_id.to_string(),
+        "/".to_string()
+    ].join("")
 }
