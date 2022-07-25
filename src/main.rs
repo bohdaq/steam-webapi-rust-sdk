@@ -12,9 +12,10 @@
 
 
 use std::{thread, time};
-use std::fs::{File, read_to_string};
+use std::fs::{File, OpenOptions, read_to_string};
 use std::io::Write;
 use std::path::Path;
+use crate::isteam_apps::get_app_list::SteamApp;
 use crate::util::get_cache_dir_path;
 
 pub mod util;
@@ -24,7 +25,7 @@ pub mod store_steampowered_com;
 fn main() {
     println!("Steam Web API Rust SDK");
 
-    let app_list = isteam_apps::get_app_list::get_cached();
+    let mut app_list = isteam_apps::get_app_list::get_cached();
     let mut iteration_number = 1;
     let app_list_size = app_list.len();
 
@@ -40,14 +41,28 @@ fn main() {
     } else {
         File::create(&already_processed_app_id_list_path).unwrap();
     }
-    let mut file = File::create(&already_processed_app_id_list_path).unwrap();
 
 
-    for app in app_list {
-        let calculated_percentage = (100_f32 * iteration_number as f32) / app_list_size as f32;
+    let filtered_list: Vec<SteamApp> = app_list
+        .into_iter()
+        .filter(|steam_app| !processed_app_id_list.contains(&steam_app.appid))
+        .collect();
+
+    let filtered_list_len = filtered_list.len();
 
 
-        println!("\n\n Iteration number: {} \n App List size:    {}  {}%", iteration_number, app_list_size, calculated_percentage);
+    for app in filtered_list {
+        let mut file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .truncate(false)
+            .open(&already_processed_app_id_list_path)
+            .unwrap();
+        let calculated_percentage = (100_f32 * iteration_number as f32) / filtered_list_len as f32;
+
+
+        println!("\n\n Iteration number: {} \n App List size:    {}  {}%  After filtering: {}", iteration_number, app_list_size, calculated_percentage, filtered_list_len);
         get_app_details(app.appid);
         iteration_number = iteration_number + 1;
         processed_app_id_list.push(app.appid);
