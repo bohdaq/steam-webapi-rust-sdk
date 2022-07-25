@@ -42,10 +42,16 @@ fn main() {
         File::create(&already_processed_app_id_list_path).unwrap();
     }
 
-
+    println!("Filtering already processed app details. This may take a while...");
+    let mut iteration = 0;
     let filtered_list: Vec<SteamApp> = app_list
         .into_iter()
-        .filter(|steam_app| !processed_app_id_list.contains(&steam_app.appid))
+        .filter(|steam_app| {
+            iteration = iteration + 1;
+            println!("Iteration {} of {}", iteration, app_list_size);
+            !processed_app_id_list.contains(&steam_app.appid)
+
+        })
         .collect();
 
     let filtered_list_len = filtered_list.len();
