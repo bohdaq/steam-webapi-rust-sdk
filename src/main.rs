@@ -12,6 +12,10 @@
 
 
 use std::{thread, time};
+use std::fs::{File, read_to_string};
+use std::io::Write;
+use std::path::Path;
+use crate::util::get_cache_dir_path;
 
 pub mod util;
 pub mod isteam_apps;
@@ -24,6 +28,20 @@ fn main() {
     let mut iteration_number = 1;
     let app_list_size = app_list.len();
 
+    let mut processed_app_id_list: Vec<i64> = vec![];
+
+    let already_processed_app_id_list_path = [get_cache_dir_path(), "/".to_string(), "processed_app_id_list.json".to_string()].join("");
+    let file_exists = Path::new(already_processed_app_id_list_path.as_str()).is_file();
+    if file_exists {
+        let serialized_string = read_to_string(&already_processed_app_id_list_path).unwrap();
+        if serialized_string.len() > 0 {
+            processed_app_id_list = serde_json::from_str(serialized_string.as_str()).unwrap();
+        }
+    } else {
+        File::create(&already_processed_app_id_list_path).unwrap();
+    }
+    let mut file = File::create(&already_processed_app_id_list_path).unwrap();
+
 
     for app in app_list {
         let calculated_percentage = (100_f32 * iteration_number as f32) / app_list_size as f32;
@@ -32,6 +50,10 @@ fn main() {
         println!("\n\n Iteration number: {} \n App List size:    {}  {}%", iteration_number, app_list_size, calculated_percentage);
         get_app_details(app.appid);
         iteration_number = iteration_number + 1;
+        processed_app_id_list.push(app.appid);
+
+        let serialized_list = serde_json::to_string(&processed_app_id_list).unwrap();
+        file.write_all(serialized_list.as_ref()).unwrap();
     }
 }
 
