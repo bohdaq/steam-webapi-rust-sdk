@@ -137,6 +137,15 @@ pub fn get_api_url() -> String {
     api_url
 }
 
+/// Makes API call and returns response body.
+///
+///
+/// # Examples
+///
+/// ```
+/// let response = isteam_apps::get_app_list::make_api_call();
+/// assert!(response.len()>0);
+/// ```
 pub fn make_api_call() -> String {
     let url = get_api_url();
 
@@ -160,6 +169,20 @@ pub fn make_api_call() -> String {
     response_string
 }
 
+/// Parses API call response body.
+///
+///
+/// # Examples
+///
+/// ```
+/// let response = isteam_apps::get_app_list::make_api_call();
+/// let steam_app_list = isteam_apps::get_app_list::parse_api_call_result(response);
+/// assert!(steam_app_list.len() > 0);
+///
+/// let steam_app = steam_app_list.get(0).unwrap();
+/// assert!(steam_app.appid > 0);
+/// assert!(steam_app.name.len() > 0);
+/// ```
 pub fn parse_api_call_result(response_string: String) -> Vec<SteamApp> {
     let mut json: Value = serde_json::from_str(&response_string).unwrap();
 
