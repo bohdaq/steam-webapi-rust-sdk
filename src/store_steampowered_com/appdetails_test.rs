@@ -31,3 +31,13 @@ fn test_get_resource_filepath_long_number() {
 
     assert_eq!(resource_filepath, "steam-webapi-cache/steampowered/appdetails/14/147730/147730.json".to_string());
 }
+
+#[test]
+fn test_get_api_url() {
+    let app_id = 147730;
+    let api_url = appdetails::get_api_url(app_id);
+
+    let expected_api_url = format!("https://store.steampowered.com/api/appdetails?appids={}&lang=en", app_id);
+
+    assert_eq!(api_url, expected_api_url.to_string());
+}
