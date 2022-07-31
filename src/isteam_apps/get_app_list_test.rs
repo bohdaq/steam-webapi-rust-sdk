@@ -1,6 +1,6 @@
 use std::fs::metadata;
-use crate::isteam_apps;
-use crate::util::as_unix_timestamp;
+use crate::{isteam_apps, util};
+use crate::util::{as_unix_timestamp};
 
 #[test]
 fn test_make_api_call() {
@@ -72,4 +72,14 @@ fn test_get_resource_filepath() {
     let resource_filepath = isteam_apps::get_app_list::get_resource_filepath();
 
     assert_eq!(resource_filepath, "steam-webapi-cache/ISteamApps-GetAppList-v2.json".to_string());
+}
+
+#[test]
+fn test_get_api_url() {
+    let api_url = isteam_apps::get_app_list::get_api_url();
+
+    let steam_web_api_key = util::get_steam_web_api_key();
+    let expected_api_url = ["https://api.steampowered.com/ISteamApps/GetAppList/v2?key=".to_string(), steam_web_api_key].join("");
+
+    assert_eq!(api_url, expected_api_url.to_string());
 }

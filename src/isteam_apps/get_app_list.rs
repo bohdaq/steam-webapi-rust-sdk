@@ -113,6 +113,19 @@ pub fn get_resource_filepath() -> String {
     filepath
 }
 
+/// Returns API url invoked on Steam API.
+///
+///
+/// # Examples
+///
+/// ```
+/// let api_url = isteam_apps::get_app_list::get_api_url();
+///
+/// let steam_web_api_key = util::get_steam_web_api_key();
+/// let expected_api_url = ["https://api.steampowered.com/ISteamApps/GetAppList/v2?key=".to_string(), steam_web_api_key].join("");
+///
+/// assert_eq!(api_url, expected_api_url.to_string());
+/// ```
 pub fn get_api_url() -> String {
     let  interface = isteam_apps::get_interface();
     let  method = get_method_name();
