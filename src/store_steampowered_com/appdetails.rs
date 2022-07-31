@@ -4,7 +4,6 @@ use std::path::Path;
 use std::io::Write;
 use serde_json::Value;
 use serde::Deserialize;
-use crate::util::get_root_dir_path;
 
 #[derive(Deserialize, Debug)]
 pub struct SteamAppDetails {
@@ -162,15 +161,12 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 }
 
 pub fn get_cache_dir_path(app_id: i64) -> String {
-    let root_path  = get_root_dir_path();
     let  interface = "steampowered";
     let  method = "appdetails";
     let number_of_entries_per_bucket = 10000;
     let bucket = app_id / number_of_entries_per_bucket;
 
     [
-        root_path,
-        "/".to_string(),
         "cache".to_string(),
         "/".to_string(),
         interface.to_string(),

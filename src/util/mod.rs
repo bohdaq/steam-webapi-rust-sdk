@@ -29,13 +29,8 @@ pub fn build_api_url(interface: &str, method: &str, version: &str, _parameters: 
     return url
 }
 
-pub fn get_root_dir_path() -> String {
-    "steam-webapi-rust-sdk".to_string()
-}
-
 pub fn get_cache_dir_path() -> String {
-    let root_path  = get_root_dir_path();
-    [root_path, "cache".to_string()].join("/")
+    ["cache".to_string()].join("/")
 }
 
 pub fn as_unix_timestamp(system_time: SystemTime) -> u64 {
