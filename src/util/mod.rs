@@ -30,7 +30,7 @@ pub fn build_api_url(interface: &str, method: &str, version: &str, _parameters: 
 }
 
 pub fn get_cache_dir_path() -> String {
-    ["cache".to_string()].join("/")
+    ["steam-webapi-cache".to_string()].join("/")
 }
 
 pub fn as_unix_timestamp(system_time: SystemTime) -> u64 {

@@ -167,7 +167,7 @@ pub fn get_cache_dir_path(app_id: i64) -> String {
     let bucket = app_id / number_of_entries_per_bucket;
 
     [
-        "cache".to_string(),
+        "steam-webapi-cache".to_string(),
         "/".to_string(),
         interface.to_string(),
         "/".to_string(),
