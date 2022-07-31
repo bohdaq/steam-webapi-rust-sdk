@@ -15,12 +15,37 @@ use std::io::Write;
 use std::path::Path;
 use crate::util::get_cache_dir_path;
 
+
+/// Retrieves apps available on the Steam store.
+///
+/// # Examples
+///
+/// ```
+/// let app_list = isteam_apps::get_app_list::get()
+///
+/// assert!(steam_app_list.len() > 0);
+/// ```
 pub fn get() -> Vec<SteamApp> {
     println!("getting app list");
     let api_response = make_api_call();
     parse_api_call_result(api_response)
 }
 
+/// Will get cached response if present, otherwise retrieves apps
+/// available on the Steam store
+/// and puts it to local cache folder.
+///
+/// # Examples
+///
+/// ```
+/// let app_list = isteam_apps::get_app_list::get_cached()
+///
+/// assert!(steam_app_list.len() > 0);
+/// let steam_app = steam_app_list.get(0).unwrap();
+/// assert!(steam_app.appid > 0);
+///
+/// assert!(steam_app.name.len() > 0);
+/// ```
 pub fn get_cached() -> Vec<SteamApp> {
     let filepath = get_resource_filepath();
 
@@ -36,6 +61,15 @@ pub fn get_cached() -> Vec<SteamApp> {
 
 }
 
+/// Returns method name invoked on Steam API.
+///
+/// # Examples
+///
+/// ```
+/// let method_name = isteam_apps::get_app_list::get_method_name()
+///
+/// assert!(method_name == "GetAppList".to_string());
+/// ```
 pub fn get_method_name() -> String {
     "GetAppList".to_string()
 }
