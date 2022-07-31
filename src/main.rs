@@ -75,7 +75,7 @@ fn main() {
 
 
         println!("\n\n Iteration number: {} \n App List size:    {}  {}%  After filtering: {}", iteration_number, app_list_size, calculated_percentage, filtered_list_len);
-        get_app_details(app.appid);
+        retrieve_detailed_app_info(app.appid);
         iteration_number = iteration_number + 1;
         processed_app_id_list.push(app.appid);
 
@@ -84,7 +84,7 @@ fn main() {
     }
 }
 
-fn get_app_details(app_id: i64) {
+fn retrieve_detailed_app_info(app_id: i64) {
     let boxed_result = get_cached_app_details(app_id);
     if boxed_result.is_ok() {
         let app_details = boxed_result.unwrap();
@@ -104,14 +104,14 @@ fn get_app_details(app_id: i64) {
             let one_minute = time::Duration::from_secs(60);
             thread::sleep(one_minute);
 
-            get_app_details(app_id);
+            retrieve_detailed_app_info(app_id);
         }
     }
 }
 
 /// Retrieves details for the given app id. First tries to get it from the local cache,
 /// if not present will make an API call to Steam and cache response. It may return an error
-/// if API responded with error response. For example it may be exceeding the limit of calls
+/// if API responded with error response. As an example it may be exceeding the limit of calls
 /// from one IP address or if the response contains not valid UTF-8 characters.
 /// Usually Steam API allows 200 requests from single IP address within 5 minutes range.
 ///
@@ -136,7 +136,38 @@ fn get_app_details(app_id: i64) {
 ///     // you can do a retry or continue execution...
 /// };
 /// ```
-fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
+pub fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
     let boxed_result = store_steampowered_com::appdetails::get_cached(app_id);
+    boxed_result
+}
+
+/// Retrieves details for the given app id. It will make an API call to Steam and cache response.
+/// It may return an error if API responded with error response. As an example it may be exceeding
+/// the limit of calls from one IP address or if the response contains not valid UTF-8 characters.
+/// Usually Steam API allows 200 requests from single IP address within 5 minutes range.
+///
+/// # Examples
+///
+/// ```
+/// let app_id = 570;
+/// let boxed_result = get_app_details(app_id);
+/// if boxed_result.is_ok() {
+///     let app_details = boxed_result.unwrap();
+///     println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
+///
+/// } else {
+///     let error_message = boxed_result.err().unwrap();
+///     println!("{} {}", error_message, app_id);
+///
+///     let is_steam_unsuccessful_response = error_message == "steampowered api returned failed response";
+///     let is_invalid_utf8_sequence = error_message == "invalid utf-8 sequence";
+///     let no_response_from_api = error_message == "no response from API";
+///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api
+///
+///     // you can do a retry or continue execution...
+/// };
+/// ```
+pub fn get_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
+    let boxed_result = store_steampowered_com::appdetails::get(app_id);
     boxed_result
 }
