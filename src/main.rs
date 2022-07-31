@@ -20,6 +20,7 @@ use std::fs::{File, OpenOptions, read_to_string};
 use std::io::Write;
 use std::path::Path;
 use crate::isteam_apps::get_app_list::SteamApp;
+use crate::store_steampowered_com::appdetails::SteamAppDetails;
 use crate::util::get_cache_dir_path;
 
 pub mod util;
@@ -84,7 +85,7 @@ fn main() {
 }
 
 fn get_app_details(app_id: i64) {
-    let boxed_result = store_steampowered_com::appdetails::get_cached(app_id);
+    let boxed_result = get_cached_app_details(app_id);
     if boxed_result.is_ok() {
         let app_details = boxed_result.unwrap();
         println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
@@ -105,8 +106,37 @@ fn get_app_details(app_id: i64) {
 
             get_app_details(app_id);
         }
-
-
-
     }
+}
+
+/// Retrieves details for the given app id. First tries to get it from the local cache,
+/// if not present will make an API call to Steam and cache response. It may return an error
+/// if API responded with error response. For example it may be exceeding the limit of calls
+/// from one IP address or if the response contains not valid UTF-8 characters.
+/// Usually Steam API allows 200 requests from single IP address within 5 minutes range.
+///
+/// # Examples
+///
+/// ```
+/// let app_id = 570;
+/// let boxed_result = get_cached_app_details(app_id);
+/// if boxed_result.is_ok() {
+///     let app_details = boxed_result.unwrap();
+///     println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
+///
+/// } else {
+///     let error_message = boxed_result.err().unwrap();
+///     println!("{} {}", error_message, app_id);
+///
+///     let is_steam_unsuccessful_response = error_message == "steampowered api returned failed response";
+///     let is_invalid_utf8_sequence = error_message == "invalid utf-8 sequence";
+///     let no_response_from_api = error_message == "no response from API";
+///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api
+///
+///     // you can do a retry or continue execution...
+/// };
+/// ```
+fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
+    let boxed_result = store_steampowered_com::appdetails::get_cached(app_id);
+    boxed_result
 }
