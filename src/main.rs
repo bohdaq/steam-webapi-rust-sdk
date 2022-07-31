@@ -1,3 +1,7 @@
+//! # Steam Web API Rust SDK
+//!
+//! `steam-webapi-rust-sdk` is a set of utility functions to access Steam Web API.
+
 // curl https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/\?key\=1F2709FC907F0DEE1D1EB4787E06B695\&account_id\=1187853121
 // curl https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/\?match_id\=6644665007\&key\=1F2709FC907F0DEE1D1EB4787E06B695
 // curl https://api.steampowered.com/IEconDOTA2_205790/GetHeroes/V001/\?key\=1F2709FC907F0DEE1D1EB4787E06B695
@@ -21,6 +25,7 @@ use crate::util::get_cache_dir_path;
 pub mod util;
 pub mod isteam_apps;
 pub mod store_steampowered_com;
+
 
 fn main() {
     println!("Steam Web API Rust SDK");
