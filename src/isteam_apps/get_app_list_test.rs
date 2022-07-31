@@ -66,3 +66,10 @@ fn test_method_name() {
 
     assert_eq!(method_name, "GetAppList".to_string());
 }
+
+#[test]
+fn test_get_resource_filepath() {
+    let resource_filepath = isteam_apps::get_app_list::get_resource_filepath();
+
+    assert_eq!(resource_filepath, "steam-webapi-cache/ISteamApps-GetAppList-v2.json".to_string());
+}

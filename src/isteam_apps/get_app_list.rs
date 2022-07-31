@@ -13,7 +13,7 @@ use std::fs;
 use std::fs::{File, read_to_string};
 use std::io::Write;
 use std::path::Path;
-use crate::util::get_cache_dir_path;
+use crate::util::{get_cache_dir_path, get_json_filetype};
 
 
 /// Retrieves apps available on the Steam store.
@@ -21,7 +21,7 @@ use crate::util::get_cache_dir_path;
 /// # Examples
 ///
 /// ```
-/// let app_list = isteam_apps::get_app_list::get()
+/// let app_list = isteam_apps::get_app_list::get();
 ///
 /// assert!(steam_app_list.len() > 0);
 /// ```
@@ -38,7 +38,7 @@ pub fn get() -> Vec<SteamApp> {
 /// # Examples
 ///
 /// ```
-/// let app_list = isteam_apps::get_app_list::get_cached()
+/// let app_list = isteam_apps::get_app_list::get_cached();
 ///
 /// assert!(steam_app_list.len() > 0);
 /// let steam_app = steam_app_list.get(0).unwrap();
@@ -66,7 +66,7 @@ pub fn get_cached() -> Vec<SteamApp> {
 /// # Examples
 ///
 /// ```
-/// let method_name = isteam_apps::get_app_list::get_method_name()
+/// let method_name = isteam_apps::get_app_list::get_method_name();
 ///
 /// assert!(method_name == "GetAppList".to_string());
 /// ```
@@ -74,14 +74,33 @@ pub fn get_method_name() -> String {
     "GetAppList".to_string()
 }
 
+
+/// Returns version of the method invoked on Steam API.
+///
+/// # Examples
+///
+/// ```
+/// let version = isteam_apps::get_app_list::get_version();
+///
+/// assert!(version == "v2".to_string());
+/// ```
 pub fn get_version() -> String {
     "v2".to_string()
 }
 
-pub fn get_json_filetype() -> String {
-    "json".to_string()
-}
 
+/// Returns path to the cached resource invoked on Steam API.
+/// The resource on the given filepath can be absent
+/// if the get method was not invoked previously.
+///
+///
+/// # Examples
+///
+/// ```
+/// let version = isteam_apps::get_app_list::get_resource_filepath();
+///
+/// assert!(version == "steam-webapi-cache/ISteamApps-GetAppList-v2.json".to_string());
+/// ```
 pub fn get_resource_filepath() -> String {
     let  interface = isteam_apps::get_interface();
     let  method = get_method_name();

@@ -4,6 +4,7 @@ use std::path::Path;
 use std::io::Write;
 use serde_json::Value;
 use serde::Deserialize;
+use crate::util::get_json_filetype;
 
 #[derive(Deserialize, Debug)]
 pub struct SteamAppDetails {
@@ -83,9 +84,6 @@ pub fn get_resource_filepath(app_id: i64) -> String {
     filepath
 }
 
-pub fn get_json_filetype() -> String {
-    "json".to_string()
-}
 
 pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<SteamAppDetails, String> {
     let mut steam_app_details = SteamAppDetails {

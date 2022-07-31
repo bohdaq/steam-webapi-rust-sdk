@@ -38,3 +38,7 @@ pub fn as_unix_timestamp(system_time: SystemTime) -> u64 {
     let unix_timestamp = since_the_epoch.as_secs() * 1000 + since_the_epoch.subsec_nanos() as u64 / 1_000_000;
     unix_timestamp
 }
+
+pub fn get_json_filetype() -> String {
+    "json".to_string()
+}
