@@ -26,6 +26,7 @@ use crate::util::get_cache_dir_path;
 pub mod util;
 pub mod isteam_apps;
 pub mod store_steampowered_com;
+mod main_test;
 
 
 fn main() {
@@ -108,6 +109,9 @@ fn retrieve_detailed_app_info(app_id: i64) {
         }
     }
 }
+
+
+
 
 /// Retrieves details for the given app id. First tries to get it from the local cache,
 /// if not present will make an API call to Steam and cache response. It may return an error
