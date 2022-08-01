@@ -1,6 +1,8 @@
 [package]
 name = "steam-webapi-rust-sdk"
 version = "0.0.1"
+homepage = "https://wlo.link/@bohdan_tsap"
+readme = "README.md"
 description = "Set of utility functions to access Steam Web API"
 edition = "2021"
 rust-version = "1.56"
