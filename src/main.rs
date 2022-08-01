@@ -28,6 +28,8 @@ use crate::util::get_cache_dir_path;
 pub mod util;
 pub mod isteam_apps;
 pub mod store_steampowered_com;
+
+#[cfg(test)]
 mod main_test;
 
 fn main() {
