@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 use serde::Deserialize;
+use serde::Serialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct SteamApp {
-    pub(crate) appid: i64,
-    pub(crate) name: String,
+    pub appid: i64,
+    pub name: String,
 }
 
 use serde_json::Value;
@@ -21,14 +22,14 @@ use crate::util::{get_cache_dir_path, get_json_filetype};
 /// # Examples
 ///
 /// ```
-/// let app_list = isteam_apps::get_app_list::get();
+/// let app_list = steam_webapi_rust_sdk::isteam_apps::get_app_list::get().unwrap();
 ///
-/// assert!(steam_app_list.len() > 0);
+/// assert!(app_list.len() > 0);
 /// ```
 pub fn get() -> Result<Vec<SteamApp>, String> {
     println!("getting app list");
     let api_response = make_api_call();
-    Ok(parse_api_call_result(api_response))
+    parse_api_call_result(api_response)
 }
 
 /// Will get cached response if present, otherwise retrieves apps
@@ -38,10 +39,10 @@ pub fn get() -> Result<Vec<SteamApp>, String> {
 /// # Examples
 ///
 /// ```
-/// let app_list = isteam_apps::get_app_list::get_cached();
+/// let app_list = steam_webapi_rust_sdk::isteam_apps::get_app_list::get_cached().unwrap();
 ///
-/// assert!(steam_app_list.len() > 0);
-/// let steam_app = steam_app_list.get(0).unwrap();
+/// assert!(app_list.len() > 0);
+/// let steam_app = app_list.get(0).unwrap();
 /// assert!(steam_app.appid > 0);
 ///
 /// assert!(steam_app.name.len() > 0);
@@ -53,7 +54,7 @@ pub fn get_cached() -> Result<Vec<SteamApp>, String> {
     let is_readable = boxed_read.is_ok();
     if is_readable {
         let cached_api_response = boxed_read.unwrap();
-        Ok(parse_api_call_result(cached_api_response))
+        parse_api_call_result(cached_api_response)
     } else {
         println!("{} {} {} unable to read from cache, invoking api", isteam_apps::get_interface(), get_method_name(), get_version());
         get()
@@ -66,7 +67,7 @@ pub fn get_cached() -> Result<Vec<SteamApp>, String> {
 /// # Examples
 ///
 /// ```
-/// let method_name = isteam_apps::get_app_list::get_method_name();
+/// let method_name = steam_webapi_rust_sdk::isteam_apps::get_app_list::get_method_name();
 ///
 /// assert!(method_name == "GetAppList".to_string());
 /// ```
@@ -80,7 +81,7 @@ pub fn get_method_name() -> String {
 /// # Examples
 ///
 /// ```
-/// let version = isteam_apps::get_app_list::get_version();
+/// let version = steam_webapi_rust_sdk::isteam_apps::get_app_list::get_version();
 ///
 /// assert!(version == "v2".to_string());
 /// ```
@@ -97,7 +98,7 @@ pub fn get_version() -> String {
 /// # Examples
 ///
 /// ```
-/// let version = isteam_apps::get_app_list::get_resource_filepath();
+/// let version = steam_webapi_rust_sdk::isteam_apps::get_app_list::get_resource_filepath();
 ///
 /// assert!(version == "steam-webapi-cache/ISteamApps-GetAppList-v2.json".to_string());
 /// ```
@@ -119,9 +120,9 @@ pub fn get_resource_filepath() -> String {
 /// # Examples
 ///
 /// ```
-/// let api_url = isteam_apps::get_app_list::get_api_url();
+/// let api_url = steam_webapi_rust_sdk::isteam_apps::get_app_list::get_api_url();
 ///
-/// let steam_web_api_key = util::get_steam_web_api_key();
+/// let steam_web_api_key = steam_webapi_rust_sdk::util::get_steam_web_api_key();
 /// let expected_api_url = ["https://api.steampowered.com/ISteamApps/GetAppList/v2?key=".to_string(), steam_web_api_key].join("");
 ///
 /// assert_eq!(api_url, expected_api_url.to_string());
@@ -143,11 +144,12 @@ pub fn get_api_url() -> String {
 /// # Examples
 ///
 /// ```
-/// let response = isteam_apps::get_app_list::make_api_call();
+/// let response = steam_webapi_rust_sdk::isteam_apps::get_app_list::make_api_call();
 /// assert!(response.len()>0);
 /// ```
 pub fn make_api_call() -> String {
     let url = get_api_url();
+    println!("url: {}", url);
 
     let response = minreq::get(url).send();
     let raw_response : Vec<u8> = response.unwrap().into_bytes();
@@ -175,15 +177,19 @@ pub fn make_api_call() -> String {
 /// # Examples
 ///
 /// ```
-/// let response = isteam_apps::get_app_list::make_api_call();
-/// let steam_app_list = isteam_apps::get_app_list::parse_api_call_result(response);
+/// let response = steam_webapi_rust_sdk::isteam_apps::get_app_list::make_api_call();
+/// let boxed_steam_app_list = steam_webapi_rust_sdk::isteam_apps::get_app_list::parse_api_call_result(response);
+/// assert!(boxed_steam_app_list.is_ok());
+///
+/// let steam_app_list = boxed_steam_app_list.unwrap();
 /// assert!(steam_app_list.len() > 0);
 ///
 /// let steam_app = steam_app_list.get(0).unwrap();
 /// assert!(steam_app.appid > 0);
 /// assert!(steam_app.name.len() > 0);
 /// ```
-pub fn parse_api_call_result(response_string: String) -> Vec<SteamApp> {
+pub fn parse_api_call_result(response_string: String) -> Result<Vec<SteamApp>, String> {
+    println!("{}", response_string);
     let mut json: Value = serde_json::from_str(&response_string).unwrap();
 
     let mut applist = json["applist"].take();
@@ -197,5 +203,5 @@ pub fn parse_api_call_result(response_string: String) -> Vec<SteamApp> {
                             .filter(|steam_app| steam_app.name != "")
                             .collect();
 
-    filtered_list
+    Ok(filtered_list)
 }

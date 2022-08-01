@@ -11,7 +11,10 @@ fn test_make_api_call() {
 #[test]
 fn test_parse_api_call_result() {
     let response = isteam_apps::get_app_list::make_api_call();
-    let steam_app_list = isteam_apps::get_app_list::parse_api_call_result(response);
+    let boxed_steam_app_list = isteam_apps::get_app_list::parse_api_call_result(response);
+    assert!(boxed_steam_app_list.is_ok());
+
+    let steam_app_list = boxed_steam_app_list.unwrap();
 
     assert!(steam_app_list.len()>0);
     let steam_app = steam_app_list.get(0).unwrap();
@@ -30,8 +33,10 @@ fn test_get() {
         cache_timestamp = util::as_unix_timestamp(system_time);
     }
 
-    let steam_app_list = get_app_list().unwrap();
+    let boxed_steam_app_list = get_app_list();
+    assert!(boxed_steam_app_list.is_ok());
 
+    let steam_app_list = boxed_steam_app_list.unwrap();
     assert!(steam_app_list.len()>0);
     let steam_app = steam_app_list.get(0).unwrap();
     assert!(steam_app.appid > 0);

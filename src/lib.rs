@@ -30,7 +30,7 @@ pub mod isteam_apps;
 pub mod store_steampowered_com;
 
 #[cfg(test)]
-mod main_test;
+mod lib_test;
 
 fn main() {
     println!("Steam Web API Rust SDK");
@@ -126,7 +126,7 @@ fn retrieve_detailed_app_info(app_id: i64) {
 ///
 /// ```
 /// let app_id = 570;
-/// let boxed_result = get_cached_app_details(app_id);
+/// let boxed_result = steam_webapi_rust_sdk::get_cached_app_details(app_id);
 /// if boxed_result.is_ok() {
 ///     let app_details = boxed_result.unwrap();
 ///     println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
@@ -138,7 +138,7 @@ fn retrieve_detailed_app_info(app_id: i64) {
 ///     let is_steam_unsuccessful_response = error_message == "steampowered api returned failed response";
 ///     let is_invalid_utf8_sequence = error_message == "invalid utf-8 sequence";
 ///     let no_response_from_api = error_message == "no response from API";
-///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api
+///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api;
 ///
 ///     // you can do a retry or continue execution...
 /// };
@@ -157,7 +157,7 @@ pub fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
 ///
 /// ```
 /// let app_id = 570;
-/// let boxed_result = get_app_details(app_id);
+/// let boxed_result = steam_webapi_rust_sdk::get_app_details(app_id);
 /// if boxed_result.is_ok() {
 ///     let app_details = boxed_result.unwrap();
 ///     println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
@@ -169,7 +169,7 @@ pub fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
 ///     let is_steam_unsuccessful_response = error_message == "steampowered api returned failed response";
 ///     let is_invalid_utf8_sequence = error_message == "invalid utf-8 sequence";
 ///     let no_response_from_api = error_message == "no response from API";
-///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api
+///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api;
 ///
 ///     // you can do a retry or continue execution...
 /// };
@@ -184,7 +184,7 @@ pub fn get_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
 /// # Examples
 ///
 /// ```
-/// let steam_app_list = get_app_list().unwrap();
+/// let steam_app_list = steam_webapi_rust_sdk::get_app_list().unwrap();
 ///
 /// assert!(steam_app_list.len()>0);
 /// let steam_app = steam_app_list.get(0).unwrap();
@@ -204,7 +204,7 @@ pub fn get_app_list() -> Result<Vec<SteamApp>, String> {
 /// # Examples
 ///
 /// ```
-/// let steam_app_list = get_cached_app_list().unwrap();
+/// let steam_app_list = steam_webapi_rust_sdk::get_cached_app_list().unwrap();
 ///
 /// assert!(steam_app_list.len()>0);
 /// let steam_app = steam_app_list.get(0).unwrap();

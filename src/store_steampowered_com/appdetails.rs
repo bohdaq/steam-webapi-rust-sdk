@@ -8,8 +8,8 @@ use crate::util::get_json_filetype;
 
 #[derive(Deserialize, Debug)]
 pub struct SteamAppDetails {
-    pub(crate) app_id: i64,
-    pub(crate) name: String,
+    pub app_id: i64,
+    pub name: String,
     pub(crate) detailed_description: String,
     pub(crate) reviews: String,
     pub(crate) header_image: String,
