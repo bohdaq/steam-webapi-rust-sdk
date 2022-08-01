@@ -25,10 +25,10 @@ use crate::util::{get_cache_dir_path, get_json_filetype};
 ///
 /// assert!(steam_app_list.len() > 0);
 /// ```
-pub fn get() -> Vec<SteamApp> {
+pub fn get() -> Result<Vec<SteamApp>, String> {
     println!("getting app list");
     let api_response = make_api_call();
-    parse_api_call_result(api_response)
+    Ok(parse_api_call_result(api_response))
 }
 
 /// Will get cached response if present, otherwise retrieves apps
@@ -46,14 +46,14 @@ pub fn get() -> Vec<SteamApp> {
 ///
 /// assert!(steam_app.name.len() > 0);
 /// ```
-pub fn get_cached() -> Vec<SteamApp> {
+pub fn get_cached() -> Result<Vec<SteamApp>, String> {
     let filepath = get_resource_filepath();
 
     let boxed_read = read_to_string(filepath);
     let is_readable = boxed_read.is_ok();
     if is_readable {
         let cached_api_response = boxed_read.unwrap();
-        parse_api_call_result(cached_api_response)
+        Ok(parse_api_call_result(cached_api_response))
     } else {
         println!("{} {} {} unable to read from cache, invoking api", isteam_apps::get_interface(), get_method_name(), get_version());
         get()

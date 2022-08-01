@@ -1,6 +1,6 @@
-use std::fs::metadata;
-use crate::{isteam_apps, util};
-use crate::util::{as_unix_timestamp};
+use crate::{get_app_list, isteam_apps, util};
+
+#[cfg(test)]
 
 #[test]
 fn test_make_api_call() {
@@ -24,13 +24,13 @@ fn test_parse_api_call_result() {
 #[test]
 fn test_get() {
     let mut cache_timestamp = 0;
-    let boxed_metadata = metadata(isteam_apps::get_app_list::get_resource_filepath());
+    let boxed_metadata = std::fs::metadata(isteam_apps::get_app_list::get_resource_filepath());
     if boxed_metadata.is_ok() {
         let system_time = boxed_metadata.unwrap().modified().unwrap();
-        cache_timestamp = as_unix_timestamp(system_time);
+        cache_timestamp = util::as_unix_timestamp(system_time);
     }
 
-    let steam_app_list = isteam_apps::get_app_list::get();
+    let steam_app_list = get_app_list().unwrap();
 
     assert!(steam_app_list.len()>0);
     let steam_app = steam_app_list.get(0).unwrap();
@@ -39,10 +39,10 @@ fn test_get() {
     assert!(steam_app.name.len() > 0);
 
     let mut latest_cache_timestamp = 0;
-    let boxed_metadata = metadata(isteam_apps::get_app_list::get_resource_filepath());
+    let boxed_metadata = std::fs::metadata(isteam_apps::get_app_list::get_resource_filepath());
     if boxed_metadata.is_ok() {
         let system_time = boxed_metadata.unwrap().modified().unwrap();
-        latest_cache_timestamp = as_unix_timestamp(system_time);
+        latest_cache_timestamp = util::as_unix_timestamp(system_time);
     }
 
     let cache_is_updated = latest_cache_timestamp > cache_timestamp;
@@ -51,7 +51,7 @@ fn test_get() {
 
 #[test]
 fn test_get_cached() {
-    let steam_app_list = isteam_apps::get_app_list::get_cached();
+    let steam_app_list = isteam_apps::get_app_list::get_cached().unwrap();
 
     assert!(steam_app_list.len()>0);
     let steam_app = steam_app_list.get(0).unwrap();

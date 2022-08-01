@@ -1,9 +1,10 @@
-use crate::store_steampowered_com::appdetails;
+use crate::store_steampowered_com;
+#[cfg(test)]
 
 #[test]
 fn test_get() {
     let app_id = 570;
-    let app = appdetails::get(app_id).unwrap();
+    let app = store_steampowered_com::appdetails::get(app_id).unwrap();
 
     assert_eq!(app.name, "Dota 2".to_string());
 }
@@ -11,7 +12,7 @@ fn test_get() {
 #[test]
 fn test_get_cached() {
     let app_id = 730;
-    let app = appdetails::get_cached(app_id).unwrap();
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
 
     assert_eq!(app.name, "Counter-Strike: Global Offensive".to_string());
 }
@@ -19,7 +20,7 @@ fn test_get_cached() {
 #[test]
 fn test_get_cache_dir_path() {
     let app_id = 730;
-    let cache_dir_path = appdetails::get_cache_dir_path(app_id);
+    let cache_dir_path = store_steampowered_com::appdetails::get_cache_dir_path(app_id);
 
     assert_eq!(cache_dir_path, "steam-webapi-cache/steampowered/appdetails/0/730/".to_string());
 }
@@ -28,7 +29,7 @@ fn test_get_cache_dir_path() {
 #[test]
 fn test_get_resource_filepath() {
     let app_id = 730;
-    let resource_filepath = appdetails::get_resource_filepath(app_id);
+    let resource_filepath = store_steampowered_com::appdetails::get_resource_filepath(app_id);
 
     assert_eq!(resource_filepath, "steam-webapi-cache/steampowered/appdetails/0/730/730.json".to_string());
 }
@@ -36,7 +37,7 @@ fn test_get_resource_filepath() {
 #[test]
 fn test_get_resource_filepath_long_number() {
     let app_id = 147730;
-    let resource_filepath = appdetails::get_resource_filepath(app_id);
+    let resource_filepath = store_steampowered_com::appdetails::get_resource_filepath(app_id);
 
     assert_eq!(resource_filepath, "steam-webapi-cache/steampowered/appdetails/14/147730/147730.json".to_string());
 }
@@ -44,7 +45,7 @@ fn test_get_resource_filepath_long_number() {
 #[test]
 fn test_get_api_url() {
     let app_id = 147730;
-    let api_url = appdetails::get_api_url(app_id);
+    let api_url = store_steampowered_com::appdetails::get_api_url(app_id);
 
     let expected_api_url = format!("https://store.steampowered.com/api/appdetails?appids={}&lang=en", app_id);
 
@@ -54,7 +55,7 @@ fn test_get_api_url() {
 #[test]
 fn test_make_api_call() {
     let app_id = 147730;
-    let result = appdetails::make_api_call(app_id);
+    let result = store_steampowered_com::appdetails::make_api_call(app_id);
 
     assert!(result.is_ok());
 
@@ -66,7 +67,7 @@ fn test_make_api_call() {
 #[test]
 fn test_parse_api_call_result() {
     let app_id = 730;
-    let result = appdetails::make_api_call(app_id);
+    let result = store_steampowered_com::appdetails::make_api_call(app_id);
 
     assert!(result.is_ok());
 
@@ -74,7 +75,7 @@ fn test_parse_api_call_result() {
     println!("{}", &response);
     assert!(response.len() > 0);
 
-    let boxed_result = appdetails::parse_api_call_result(response, app_id);
+    let boxed_result = store_steampowered_com::appdetails::parse_api_call_result(response, app_id);
     assert!(boxed_result.is_ok());
 
     let steam_app = boxed_result.unwrap();

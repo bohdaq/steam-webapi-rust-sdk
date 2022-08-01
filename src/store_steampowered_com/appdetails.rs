@@ -68,8 +68,8 @@ pub fn make_api_call(app_id: i64) -> Result<String, String> {
     Ok(response_string)
 }
 
-pub fn get_api_url(appId: i64) -> String {
-    let api_url = format!("https://store.steampowered.com/api/appdetails?appids={}&lang=en", appId);
+pub fn get_api_url(app_id: i64) -> String {
+    let api_url = format!("https://store.steampowered.com/api/appdetails?appids={}&lang=en", app_id);
     api_url
 }
 

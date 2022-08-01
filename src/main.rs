@@ -30,11 +30,10 @@ pub mod isteam_apps;
 pub mod store_steampowered_com;
 mod main_test;
 
-
 fn main() {
     println!("Steam Web API Rust SDK");
 
-    let mut app_list = isteam_apps::get_app_list::get_cached();
+    let app_list = get_app_list().unwrap();
     let mut iteration_number = 1;
     let app_list_size = app_list.len();
 
@@ -175,5 +174,43 @@ pub fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
 /// ```
 pub fn get_app_details(app_id: i64) -> Result<SteamAppDetails, String> {
     let boxed_result = store_steampowered_com::appdetails::get(app_id);
+    boxed_result
+}
+
+/// Retrieves list of apps available on Steam. Each item consists of 2 fields: appid and name
+///
+/// # Examples
+///
+/// ```
+/// let steam_app_list = get_app_list().unwrap();
+///
+/// assert!(steam_app_list.len()>0);
+/// let steam_app = steam_app_list.get(0).unwrap();
+/// assert!(steam_app.appid > 0);
+///
+/// assert!(steam_app.name.len() > 0);
+/// ```
+pub fn get_app_list() -> Result<Vec<SteamApp>, String> {
+    let boxed_result = isteam_apps::get_app_list::get();
+    boxed_result
+}
+
+
+/// Retrieves list of apps available on Steam. First tries to get it from local cache.
+/// Each item consists of 2 fields: appid and name
+///
+/// # Examples
+///
+/// ```
+/// let steam_app_list = get_cached_app_list().unwrap();
+///
+/// assert!(steam_app_list.len()>0);
+/// let steam_app = steam_app_list.get(0).unwrap();
+/// assert!(steam_app.appid > 0);
+///
+/// assert!(steam_app.name.len() > 0);
+/// ```
+pub fn get_cached_app_list() -> Result<Vec<SteamApp>, String> {
+    let boxed_result = isteam_apps::get_app_list::get_cached();
     boxed_result
 }
