@@ -1,11 +1,14 @@
 [package]
 name = "steam-webapi-rust-sdk"
 version = "0.0.1"
-homepage = "https://wlo.link/@bohdan_tsap"
+homepage = "https://github.com/bohdaq/steam-webapi-rust-sdk"
+repository = "https://github.com/bohdaq/steam-webapi-rust-sdk"
 readme = "README.md"
 description = "Set of utility functions to access Steam Web API"
 edition = "2021"
 rust-version = "1.56"
+keywords = ["steam", "api", "gamedev"]
+categories = ["api-bindings", "caching", "game-development", "web-programming"]
 license = "MIT OR Apache-2.0 OR ISC OR LGPL-3.0-or-later OR CC-BY-4.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
