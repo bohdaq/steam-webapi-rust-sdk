@@ -7,6 +7,7 @@ readme = "README.md"
 description = "Set of utility functions to access Steam Web API"
 edition = "2021"
 rust-version = "1.56"
+authors = ["Bohdan Tsap <bohdan.tsap@tutanota.com>"]
 keywords = ["steam", "api", "gamedev"]
 categories = ["api-bindings", "caching", "game-development", "web-programming"]
 license = "MIT OR Apache-2.0 OR ISC OR LGPL-3.0-or-later OR CC-BY-4.0"
