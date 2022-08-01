@@ -168,6 +168,7 @@ pub fn make_api_call() -> String {
 
     file.write_all(response_string.as_ref()).unwrap();
 
+    println!("response_string: {}", &response_string[0..20]);
     response_string
 }
 
@@ -189,7 +190,6 @@ pub fn make_api_call() -> String {
 /// assert!(steam_app.name.len() > 0);
 /// ```
 pub fn parse_api_call_result(response_string: String) -> Result<Vec<SteamApp>, String> {
-    println!("{}", response_string);
     let mut json: Value = serde_json::from_str(&response_string).unwrap();
 
     let mut applist = json["applist"].take();
