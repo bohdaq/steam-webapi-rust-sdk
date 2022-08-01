@@ -17,6 +17,15 @@ fn test_get_cached() {
 }
 
 #[test]
+fn test_get_cache_dir_path() {
+    let app_id = 730;
+    let cache_dir_path = appdetails::get_cache_dir_path(app_id);
+
+    assert_eq!(cache_dir_path, "steam-webapi-cache/steampowered/appdetails/0/730/".to_string());
+}
+
+
+#[test]
 fn test_get_resource_filepath() {
     let app_id = 730;
     let resource_filepath = appdetails::get_resource_filepath(app_id);
