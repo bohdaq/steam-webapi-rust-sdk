@@ -11,13 +11,8 @@
 //! simply clone [steam-webapi-cache](https://github.com/bohdaq/steam-webapi-cache)
 //! into the root folder of your project.
 
-use std::{thread, time};
-use std::fs::{File, OpenOptions, read_to_string};
-use std::io::Write;
-use std::path::Path;
 use crate::isteam_apps::get_app_list::SteamApp;
 use crate::store_steampowered_com::appdetails::SteamAppDetails;
-use crate::util::get_cache_dir_path;
 
 pub mod util;
 pub mod isteam_apps;
