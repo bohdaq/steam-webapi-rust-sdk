@@ -50,3 +50,15 @@ fn test_get_api_url() {
 
     assert_eq!(api_url, expected_api_url.to_string());
 }
+
+#[test]
+fn test_make_api_call() {
+    let app_id = 147730;
+    let result = appdetails::make_api_call(app_id);
+
+    assert!(result.is_ok());
+
+    let response = result.unwrap();
+    println!("{}", &response);
+    assert!(response.len() > 0);
+}
