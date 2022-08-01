@@ -3,6 +3,13 @@
 //! `steam-webapi-rust-sdk` is a set of utility functions to access Steam Web API.
 //!
 //! In order to use this library make sure to set STEAM_WEB_API_KEY system environment variable.
+//!
+//! The library itself tries to minimize number of networks calls through the caching relevant
+//! responses to the 'steam-webapi-cache' folder.
+//!
+//! There is already prebuilt cache for all steam apps, in order to use it,
+//! simply clone [steam-webapi-cache](https://github.com/bohdaq/steam-webapi-cache)
+//! into the root folder of your project.
 
 use std::{thread, time};
 use std::fs::{File, OpenOptions, read_to_string};
