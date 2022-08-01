@@ -62,3 +62,28 @@ fn test_make_api_call() {
     println!("{}", &response);
     assert!(response.len() > 0);
 }
+
+#[test]
+fn test_parse_api_call_result() {
+    let app_id = 730;
+    let result = appdetails::make_api_call(app_id);
+
+    assert!(result.is_ok());
+
+    let response = result.unwrap();
+    println!("{}", &response);
+    assert!(response.len() > 0);
+
+    let boxed_result = appdetails::parse_api_call_result(response, app_id);
+    assert!(boxed_result.is_ok());
+
+    let steam_app = boxed_result.unwrap();
+    assert_eq!(steam_app.app_id, app_id);
+    assert_eq!(steam_app.name, "Counter-Strike: Global Offensive");
+    assert_eq!(steam_app.reviews, "");
+    assert_eq!(steam_app.header_image, "https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg?t=1641233427");
+    assert_eq!(steam_app.website, "http://blog.counter-strike.net/");
+
+    let description = "Counter-Strike: Global Offensive (CS: GO) expands upon the team-based action gameplay that it pioneered when it was launched 19 years ago.<br />\r\n<br />\r\nCS: GO features new maps, characters, weapons, and game modes, and delivers updated versions of the classic CS content (de_dust2, etc.).<br />\r\n<br />\r\n&quot;Counter-Strike took the gaming industry by surprise when the unlikely MOD became the most played online PC action game in the world almost immediately after its release in August 1999,&quot; said Doug Lombardi at Valve. &quot;For the past 12 years, it has continued to be one of the most-played games in the world, headline competitive gaming tournaments and selling over 25 million units worldwide across the franchise. CS: GO promises to expand on CS' award-winning gameplay and deliver it to gamers on the PC as well as the next gen consoles and the Mac.&quot;";
+    assert_eq!(steam_app.detailed_description, description);
+}
