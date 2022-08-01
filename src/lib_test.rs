@@ -24,7 +24,6 @@ fn test_get_app_list() {
     assert!(boxed_steam_app_list.is_ok());
 
     let steam_app_list = boxed_steam_app_list.unwrap();
-    println!("number of apps: {}", steam_app_list.len());
     assert!(steam_app_list.len()>0);
     let steam_app = steam_app_list.get(0).unwrap();
     assert!(steam_app.appid > 0);
@@ -40,7 +39,6 @@ fn test_get_cached_app_list() {
 
     let steam_app_list = boxed_steam_app_list.unwrap();
 
-    println!("number of apps: {}", steam_app_list.len());
     assert!(steam_app_list.len()>0);
     let steam_app = steam_app_list.get(0).unwrap();
     assert!(steam_app.appid > 0);

@@ -17,7 +17,6 @@ pub struct SteamAppDetails {
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
-    println!("appdetails for {}", app_id);
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
         return Err(api_response_boxed.err().unwrap().to_string());
@@ -28,7 +27,6 @@ pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
 
 pub fn get_cached(app_id: i64) -> Result<SteamAppDetails, String> {
     let filepath = get_resource_filepath(app_id);
-    println!("{}", &filepath);
 
     let boxed_read = read_to_string(filepath);
     let is_readable = boxed_read.is_ok();
@@ -36,7 +34,6 @@ pub fn get_cached(app_id: i64) -> Result<SteamAppDetails, String> {
         let cached_api_response = boxed_read.unwrap();
         parse_api_call_result(cached_api_response, app_id)
     } else {
-        println!("unable to read from cache, invoking api");
         get(app_id)
     }
 
@@ -51,19 +48,16 @@ pub fn make_api_call(app_id: i64) -> Result<String, String> {
     }
 
     let raw_response : Vec<u8> = boxed_response.unwrap().into_bytes();
-    println!("raw_response length {}", raw_response.len());
 
     let response_string_boxed = String::from_utf8(raw_response);
     if response_string_boxed.is_err() {
         let error_message = response_string_boxed.err().unwrap().to_string();
-        println!("{}", &error_message);
         if error_message == "invalid utf-8 sequence of 1 bytes from index 1" {
             return Err("no response from API".to_string());
         }
         return Err("invalid utf-8 sequence".to_string());
     }
     let response_string: String = response_string_boxed.unwrap();
-    println!("make_api_call response_string {}", response_string.len());
 
     Ok(response_string)
 }
@@ -98,7 +92,6 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
     if response_string.len() > 0 {
         let boxed_initial_parse = serde_json::from_str(&response_string);
         if boxed_initial_parse.is_err() {
-            println!("{}", &response_string);
             return Err(boxed_initial_parse.err().unwrap().to_string());
         }
         let mut json: Value = boxed_initial_parse.unwrap();
@@ -138,8 +131,6 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         if boxed_reviews.as_str().is_some() {
             steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
         }
-
-        // println!("steam_app_details: {}", steam_app_details.detailed_description);
     }
 
     let filepath = get_resource_filepath(app_id);

@@ -60,7 +60,6 @@ fn test_make_api_call() {
     assert!(result.is_ok());
 
     let response = result.unwrap();
-    println!("{}", &response);
     assert!(response.len() > 0);
 }
 
@@ -72,7 +71,6 @@ fn test_parse_api_call_result() {
     assert!(result.is_ok());
 
     let response = result.unwrap();
-    println!("{}", &response);
     assert!(response.len() > 0);
 
     let boxed_result = store_steampowered_com::appdetails::parse_api_call_result(response, app_id);
