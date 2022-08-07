@@ -13,6 +13,7 @@ pub struct SteamAppDetails {
     pub app_type: String,
     pub supported_languages: String,
     pub support_info: SupportInfo,
+    pub short_description: String,
     pub(crate) detailed_description: String,
     pub(crate) reviews: String,
     pub(crate) header_image: String,
@@ -98,6 +99,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             url: "".to_string(),
             email: "".to_string()
         },
+        short_description: "".to_string(),
         detailed_description: "".to_string(),
         reviews: "".to_string(),
         header_image: "".to_string(),
@@ -148,6 +150,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             };
 
             steam_app_details.support_info = support_info;
+        }
+
+        let boxed_short_description = app_details["short_description"].take();
+        if boxed_short_description.as_str().is_some() {
+            steam_app_details.short_description = boxed_short_description.as_str().unwrap().to_string();
         }
 
         let boxed_name = app_details["name"].take();

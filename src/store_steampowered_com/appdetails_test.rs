@@ -19,6 +19,7 @@ fn test_get_cached() {
     assert_eq!(app.supported_languages, "Czech, Danish, Dutch, English<strong>*</strong>, Finnish, French, German, Hungarian, Italian, Japanese, Korean, Norwegian, Polish, Portuguese, Portuguese - Brazil, Romanian, Russian, Simplified Chinese, Spanish - Spain, Swedish, Thai, Traditional Chinese, Turkish, Bulgarian, Ukrainian, Greek, Spanish - Latin America, Vietnamese<br><strong>*</strong>languages with full audio support".to_string());
     assert_eq!(app.support_info.url, "".to_string());
     assert_eq!(app.support_info.email, "".to_string());
+    assert_eq!(app.short_description, "Counter-Strike: Global Offensive (CS: GO) expands upon the team-based action gameplay that it pioneered when it was launched 19 years ago. CS: GO features new maps, characters, weapons, and game modes, and delivers updated versions of the classic CS content (de_dust2, etc.).".to_string());
 }
 
 #[test]
