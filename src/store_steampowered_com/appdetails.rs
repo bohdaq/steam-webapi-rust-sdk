@@ -12,10 +12,17 @@ pub struct SteamAppDetails {
     pub name: String,
     pub app_type: String,
     pub supported_languages: String,
+    pub support_info: SupportInfo,
     pub(crate) detailed_description: String,
     pub(crate) reviews: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct SupportInfo {
+    pub url: String,
+    pub email: String,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -87,6 +94,10 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         name: "".to_string(),
         app_type: "".to_string(),
         supported_languages: "".to_string(),
+        support_info: SupportInfo {
+            url: "".to_string(),
+            email: "".to_string()
+        },
         detailed_description: "".to_string(),
         reviews: "".to_string(),
         header_image: "".to_string(),
@@ -124,6 +135,20 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.supported_languages = boxed_supported_languages.as_str().unwrap().to_string();
         }
 
+        let boxed_support_info = app_details["support_info"].take();
+        if boxed_support_info.as_object().is_some() {
+            let support_info = boxed_support_info.as_object().unwrap();
+
+            let url =  support_info.get("url").unwrap().as_str().unwrap();
+            let email =  support_info.get("email").unwrap().as_str().unwrap();
+
+            let support_info = SupportInfo {
+                url: url.to_string(),
+                email: email.to_string(),
+            };
+
+            steam_app_details.support_info = support_info;
+        }
 
         let boxed_name = app_details["name"].take();
         if boxed_name.as_str().is_some() {
