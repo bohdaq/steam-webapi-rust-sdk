@@ -10,6 +10,8 @@ use crate::util::get_json_filetype;
 pub struct SteamAppDetails {
     pub app_id: i64,
     pub name: String,
+    pub app_type: String,
+    pub supported_languages: String,
     pub(crate) detailed_description: String,
     pub(crate) reviews: String,
     pub(crate) header_image: String,
@@ -83,6 +85,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
     let mut steam_app_details = SteamAppDetails {
         app_id: app_id,
         name: "".to_string(),
+        app_type: "".to_string(),
+        supported_languages: "".to_string(),
         detailed_description: "".to_string(),
         reviews: "".to_string(),
         header_image: "".to_string(),
@@ -105,29 +109,38 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
         let mut app_details : Value = app_details_wrapped["data"].take();
 
-        let boxed_reviews = app_details["reviews"].take();
-        let boxed_detailed_description = app_details["detailed_description"].take();
-        let boxed_header_image = app_details["header_image"].take();
         let boxed_website = app_details["website"].take();
-        let boxed_name = app_details["name"].take();
-
-
-        if boxed_name.as_str().is_some() {
-            steam_app_details.name = boxed_name.as_str().unwrap().to_string();
-        }
-
         if boxed_website.as_str().is_some() {
             steam_app_details.website = boxed_website.as_str().unwrap().to_string();
         }
 
+        let boxed_type = app_details["type"].take();
+        if boxed_type.as_str().is_some() {
+            steam_app_details.app_type = boxed_type.as_str().unwrap().to_string();
+        }
+
+        let boxed_supported_languages = app_details["supported_languages"].take();
+        if boxed_supported_languages.as_str().is_some() {
+            steam_app_details.supported_languages = boxed_supported_languages.as_str().unwrap().to_string();
+        }
+
+
+        let boxed_name = app_details["name"].take();
+        if boxed_name.as_str().is_some() {
+            steam_app_details.name = boxed_name.as_str().unwrap().to_string();
+        }
+
+        let boxed_header_image = app_details["header_image"].take();
         if boxed_header_image.as_str().is_some() {
             steam_app_details.header_image = boxed_header_image.as_str().unwrap().to_string();
         }
 
+        let boxed_detailed_description = app_details["detailed_description"].take();
         if boxed_detailed_description.as_str().is_some() {
             steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
         }
 
+        let boxed_reviews = app_details["reviews"].take();
         if boxed_reviews.as_str().is_some() {
             steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
         }

@@ -15,6 +15,8 @@ fn test_get_cached() {
     let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
 
     assert_eq!(app.name, "Counter-Strike: Global Offensive".to_string());
+    assert_eq!(app.app_type, "game".to_string());
+    assert_eq!(app.supported_languages, "Czech, Danish, Dutch, English<strong>*</strong>, Finnish, French, German, Hungarian, Italian, Japanese, Korean, Norwegian, Polish, Portuguese, Portuguese - Brazil, Romanian, Russian, Simplified Chinese, Spanish - Spain, Swedish, Thai, Traditional Chinese, Turkish, Bulgarian, Ukrainian, Greek, Spanish - Latin America, Vietnamese<br><strong>*</strong>languages with full audio support".to_string());
 }
 
 #[test]
