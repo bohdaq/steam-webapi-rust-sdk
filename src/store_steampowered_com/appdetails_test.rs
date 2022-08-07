@@ -7,6 +7,7 @@ fn test_get() {
     let app = store_steampowered_com::appdetails::get(app_id).unwrap();
 
     assert_eq!(app.name, "Dota 2".to_string());
+    assert_eq!(app.reviews, "“A modern multiplayer masterpiece.”<br>9.5/10 – <a href=\"https://www.destructoid.com/review-dota-2-258506.phtml\" target=\"_blank\" rel=\"noreferrer\"  >Destructoid</a><br><br>“Once you start to learn its secrets, there’s a wild and exciting variety of play here that’s unmatched, even by its peers.”<br>9.4/10 – <a href=\"http://www.ign.com/articles/2013/07/24/dota-2-review\" target=\"_blank\" rel=\"noreferrer\"  >IGN</a><br><br>“Dota 2 is possibly the only competitive free-to-play game that is totally uncompromised by its business model.”<br>90/100 – <a href=\"http://www.pcgamer.com/dota-2-review-2/\" target=\"_blank\" rel=\"noreferrer\"  >PC Gamer</a><br>".to_string());
 }
 
 #[test]

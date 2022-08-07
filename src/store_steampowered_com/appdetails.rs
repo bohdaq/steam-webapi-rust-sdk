@@ -15,8 +15,8 @@ pub struct SteamAppDetails {
     pub support_info: SupportInfo,
     pub short_description: String,
     pub screenshots: Vec<Screenshot>,
+    pub reviews: String,
     pub(crate) detailed_description: String,
-    pub(crate) reviews: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
 }
@@ -186,6 +186,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.screenshots = screenshoot_parsed_list;
         }
 
+        let boxed_reviews = app_details["reviews"].take();
+        if boxed_reviews.as_str().is_some() {
+            steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
+        }
+
         let boxed_name = app_details["name"].take();
         if boxed_name.as_str().is_some() {
             steam_app_details.name = boxed_name.as_str().unwrap().to_string();
@@ -201,10 +206,6 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
         }
 
-        let boxed_reviews = app_details["reviews"].take();
-        if boxed_reviews.as_str().is_some() {
-            steam_app_details.reviews = boxed_reviews.as_str().unwrap().to_string();
-        }
     }
 
     let filepath = get_resource_filepath(app_id);
