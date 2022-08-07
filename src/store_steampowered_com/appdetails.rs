@@ -14,6 +14,7 @@ pub struct SteamAppDetails {
     pub supported_languages: String,
     pub support_info: SupportInfo,
     pub short_description: String,
+    pub screenshots: Vec<Screenshot>,
     pub(crate) detailed_description: String,
     pub(crate) reviews: String,
     pub(crate) header_image: String,
@@ -24,6 +25,13 @@ pub struct SteamAppDetails {
 pub struct SupportInfo {
     pub url: String,
     pub email: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Screenshot {
+    pub path_thumbnail: String,
+    pub path_full: String,
+    pub id: i64,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -100,6 +108,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             email: "".to_string()
         },
         short_description: "".to_string(),
+        screenshots: vec![],
         detailed_description: "".to_string(),
         reviews: "".to_string(),
         header_image: "".to_string(),
@@ -155,6 +164,26 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         let boxed_short_description = app_details["short_description"].take();
         if boxed_short_description.as_str().is_some() {
             steam_app_details.short_description = boxed_short_description.as_str().unwrap().to_string();
+        }
+
+        let boxed_screenshots = app_details["screenshots"].take();
+        if boxed_screenshots.as_array().is_some() {
+            let mut screenshoot_parsed_list : Vec<Screenshot> = vec![];
+
+            let screenshots_list = boxed_screenshots.as_array().unwrap();
+            for screenshot_val in screenshots_list {
+                let mut screenshot = Screenshot {
+                    path_thumbnail: "".to_string(),
+                    path_full: "".to_string(),
+                    id: 0
+                };
+                screenshot.path_thumbnail = screenshot_val["path_thumbnail"].as_str().unwrap().to_string();
+                screenshot.path_full = screenshot_val["path_full"].as_str().unwrap().to_string();
+                screenshot.id = screenshot_val["id"].as_i64().unwrap();
+
+                screenshoot_parsed_list.push(screenshot);
+            }
+            steam_app_details.screenshots = screenshoot_parsed_list;
         }
 
         let boxed_name = app_details["name"].take();

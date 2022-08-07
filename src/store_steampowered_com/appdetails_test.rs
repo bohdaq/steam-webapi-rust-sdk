@@ -20,6 +20,16 @@ fn test_get_cached() {
     assert_eq!(app.support_info.url, "".to_string());
     assert_eq!(app.support_info.email, "".to_string());
     assert_eq!(app.short_description, "Counter-Strike: Global Offensive (CS: GO) expands upon the team-based action gameplay that it pioneered when it was launched 19 years ago. CS: GO features new maps, characters, weapons, and game modes, and delivers updated versions of the classic CS content (de_dust2, etc.).".to_string());
+
+    let first_screen = app.screenshots.get(0).unwrap();
+    assert_eq!(first_screen.id, 0);
+    assert_eq!(first_screen.path_thumbnail, "https://cdn.akamai.steamstatic.com/steam/apps/730/ss_118cb022b9a43f70d2e5a2df7427f29088b6b191.600x338.jpg?t=1641233427");
+    assert_eq!(first_screen.path_full, "https://cdn.akamai.steamstatic.com/steam/apps/730/ss_118cb022b9a43f70d2e5a2df7427f29088b6b191.1920x1080.jpg?t=1641233427");
+
+    let last_screen = app.screenshots.get(10).unwrap();
+    assert_eq!(last_screen.id, 10);
+    assert_eq!(last_screen.path_thumbnail, "https://cdn.akamai.steamstatic.com/steam/apps/730/ss_60b4f959497899515f46012df805b0006ef21af6.600x338.jpg?t=1641233427");
+    assert_eq!(last_screen.path_full, "https://cdn.akamai.steamstatic.com/steam/apps/730/ss_60b4f959497899515f46012df805b0006ef21af6.1920x1080.jpg?t=1641233427");
 }
 
 #[test]
