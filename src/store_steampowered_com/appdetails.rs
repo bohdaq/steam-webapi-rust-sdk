@@ -16,6 +16,7 @@ pub struct SteamAppDetails {
     pub short_description: String,
     pub screenshots: Vec<Screenshot>,
     pub reviews: String,
+    pub required_age: i64,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -113,6 +114,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         reviews: "".to_string(),
         header_image: "".to_string(),
         website: "".to_string(),
+        required_age: 0
     };
 
     if response_string.len() > 0 {
@@ -159,6 +161,14 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             };
 
             steam_app_details.support_info = support_info;
+        }
+
+        let boxed_required_age = app_details["required_age"].take();
+        if boxed_required_age.as_str().is_some() {
+            steam_app_details.required_age = boxed_required_age.as_str().unwrap().parse().unwrap();
+        }
+        if boxed_required_age.as_i64().is_some() {
+            steam_app_details.required_age = boxed_required_age.as_i64().unwrap();
         }
 
         let boxed_short_description = app_details["short_description"].take();

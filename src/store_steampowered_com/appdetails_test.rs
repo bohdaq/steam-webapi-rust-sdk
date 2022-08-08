@@ -11,6 +11,14 @@ fn test_get() {
 }
 
 #[test]
+fn test_get_2210() {
+    let app_id = 2210;
+    let app = store_steampowered_com::appdetails::get(app_id).unwrap();
+
+    assert_eq!(app.required_age, 18);
+}
+
+#[test]
 fn test_get_cached() {
     let app_id = 730;
     let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
@@ -31,6 +39,9 @@ fn test_get_cached() {
     assert_eq!(last_screen.id, 10);
     assert_eq!(last_screen.path_thumbnail, "https://cdn.akamai.steamstatic.com/steam/apps/730/ss_60b4f959497899515f46012df805b0006ef21af6.600x338.jpg?t=1641233427");
     assert_eq!(last_screen.path_full, "https://cdn.akamai.steamstatic.com/steam/apps/730/ss_60b4f959497899515f46012df805b0006ef21af6.1920x1080.jpg?t=1641233427");
+
+    assert_eq!(app.required_age, 0);
+
 }
 
 #[test]
