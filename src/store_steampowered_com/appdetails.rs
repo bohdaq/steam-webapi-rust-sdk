@@ -17,6 +17,7 @@ pub struct SteamAppDetails {
     pub screenshots: Vec<Screenshot>,
     pub reviews: String,
     pub required_age: i64,
+    pub release_date: ReleaseDate,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -33,6 +34,12 @@ pub struct Screenshot {
     pub path_thumbnail: String,
     pub path_full: String,
     pub id: i64,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct ReleaseDate {
+    pub date: String,
+    pub coming_soon: bool,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -114,7 +121,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         reviews: "".to_string(),
         header_image: "".to_string(),
         website: "".to_string(),
-        required_age: 0
+        required_age: 0,
+        release_date: ReleaseDate {
+            date: "".to_string(),
+            coming_soon: false
+        }
     };
 
     if response_string.len() > 0 {
@@ -161,6 +172,21 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             };
 
             steam_app_details.support_info = support_info;
+        }
+
+        let boxed_release_date = app_details["release_date"].take();
+        if boxed_release_date.as_object().is_some() {
+            let release_date_map = boxed_release_date.as_object().unwrap();
+
+            let date =  release_date_map.get("date").unwrap().as_str().unwrap();
+            let coming_soon =  release_date_map.get("coming_soon").unwrap().as_bool().unwrap();
+
+            let release_date = ReleaseDate {
+                date: date.to_string(),
+                coming_soon,
+            };
+
+            steam_app_details.release_date = release_date;
         }
 
         let boxed_required_age = app_details["required_age"].take();
