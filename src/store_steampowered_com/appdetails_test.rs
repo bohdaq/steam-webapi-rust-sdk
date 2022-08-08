@@ -43,6 +43,7 @@ fn test_get_cached() {
     assert_eq!(app.required_age, 0);
     assert_eq!(app.release_date.coming_soon, false);
     assert_eq!(app.release_date.date, "Aug 21, 2012");
+    assert_eq!(app.recommendations.total, 3452092);
 
 }
 

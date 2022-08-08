@@ -18,6 +18,7 @@ pub struct SteamAppDetails {
     pub reviews: String,
     pub required_age: i64,
     pub release_date: ReleaseDate,
+    pub recommendations: Recommendations,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -40,6 +41,11 @@ pub struct Screenshot {
 pub struct ReleaseDate {
     pub date: String,
     pub coming_soon: bool,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Recommendations {
+    pub total: i64,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -125,6 +131,9 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         release_date: ReleaseDate {
             date: "".to_string(),
             coming_soon: false
+        },
+        recommendations: Recommendations {
+            total: 0
         }
     };
 
@@ -172,6 +181,19 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             };
 
             steam_app_details.support_info = support_info;
+        }
+
+        let boxed_recommendations = app_details["recommendations"].take();
+        if boxed_recommendations.as_object().is_some() {
+            let recommendations_map = boxed_recommendations.as_object().unwrap();
+
+            let total =  recommendations_map.get("total").unwrap().as_i64().unwrap();
+
+            let recommendations = Recommendations {
+                total
+            };
+
+            steam_app_details.recommendations = recommendations;
         }
 
         let boxed_release_date = app_details["release_date"].take();
