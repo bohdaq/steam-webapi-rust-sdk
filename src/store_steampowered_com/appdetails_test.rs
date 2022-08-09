@@ -50,6 +50,15 @@ fn test_get_550() {
 }
 
 #[test]
+fn test_get_320() {
+    let app_id = 320;
+    let app = store_steampowered_com::appdetails::get(app_id).unwrap();
+
+    assert_eq!(app.mac_requirements.recommended, "");
+    assert_eq!(app.mac_requirements.minimum, "<strong>Minimum: </strong>OS X version Leopard 10.5.8, Snow Leopard 10.6.3, 1GB RAM, NVIDIA GeForce 8 or higher, ATI X1600 or higher, or Intel HD 3000 or higher Mouse, Keyboard, Internet Connection");
+}
+
+#[test]
 fn test_get_cached_730() {
     let app_id = 730;
     let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();

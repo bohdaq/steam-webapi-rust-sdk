@@ -373,6 +373,31 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         }
 
 
+        let boxed_mac_requirements = app_details["mac_requirements"].take();
+        if boxed_mac_requirements.as_object().is_some() {
+            let mac_requirements_map = boxed_mac_requirements.as_object().unwrap();
+
+            let mut mac_requirements = MacRequirements {
+                recommended: "".to_string(),
+                minimum: "".to_string()
+            };
+
+            let boxed_minimum = mac_requirements_map.get("minimum");
+            if boxed_minimum.is_some() {
+                mac_requirements.minimum = boxed_minimum.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_recommended = mac_requirements_map.get("recommended");
+            if boxed_recommended.is_some() {
+                mac_requirements.recommended = boxed_recommended.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            steam_app_details.mac_requirements = mac_requirements;
+        }
+
+
         let boxed_recommendations = app_details["recommendations"].take();
         if boxed_recommendations.as_object().is_some() {
             let recommendations_map = boxed_recommendations.as_object().unwrap();
