@@ -19,7 +19,29 @@ fn test_get_2210() {
 }
 
 #[test]
-fn test_get_cached() {
+fn test_get_1070410() {
+    let app_id = 1070410;
+    let app = store_steampowered_com::appdetails::get(app_id).unwrap();
+
+    assert_eq!(app.price_overview.recurring_sub_desc, "279₴ at checkout, auto-renewed every 1 month(s) at 169₴.");
+    assert_eq!(app.price_overview.recurring_sub, 414304);
+    assert_eq!(app.price_overview.currency, "UAH");
+    assert_eq!(app.price_overview.final_price, 29900);
+    assert_eq!(app.price_overview.discount_percent, 0);
+    assert_eq!(app.price_overview.initial, 29900);
+    assert_eq!(app.price_overview.initial_formatted, "");
+}
+
+#[test]
+fn test_get_1900() {
+    let app_id = 1900;
+    let app = store_steampowered_com::appdetails::get(app_id).unwrap();
+
+    assert_eq!(app.price_overview.initial_formatted, "");
+}
+
+#[test]
+fn test_get_cached_730() {
     let app_id = 730;
     let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
 

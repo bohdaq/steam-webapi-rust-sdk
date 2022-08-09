@@ -19,6 +19,7 @@ pub struct SteamAppDetails {
     pub required_age: i64,
     pub release_date: ReleaseDate,
     pub recommendations: Recommendations,
+    pub price_overview: PriceOverview,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -46,6 +47,18 @@ pub struct ReleaseDate {
 #[derive(Deserialize, Debug)]
 pub struct Recommendations {
     pub total: i64,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PriceOverview {
+    pub recurring_sub_desc: String,
+    pub recurring_sub: i64,
+    pub initial_formatted: String,
+    pub initial: i64,
+    pub final_formatted: String,
+    pub final_price: i64,
+    pub discount_percent: i64,
+    pub currency: String,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -134,6 +147,16 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         },
         recommendations: Recommendations {
             total: 0
+        },
+        price_overview: PriceOverview {
+            recurring_sub_desc: "".to_string(),
+            recurring_sub: 0,
+            initial_formatted: "".to_string(),
+            initial: 0,
+            final_formatted: "".to_string(),
+            final_price: 0,
+            discount_percent: 0,
+            currency: "".to_string()
         }
     };
 
@@ -182,6 +205,74 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
             steam_app_details.support_info = support_info;
         }
+
+
+        let boxed_price_overview = app_details["price_overview"].take();
+        if boxed_price_overview.as_object().is_some() {
+            let price_overview_map = boxed_price_overview.as_object().unwrap();
+
+
+            let mut price_overview = PriceOverview {
+                recurring_sub_desc: "".to_string(),
+                recurring_sub: 0,
+                initial_formatted: "".to_string(),
+                initial: 0,
+                final_formatted: "".to_string(),
+                final_price: 0,
+                discount_percent: 0,
+                currency: "".to_string()
+            };
+
+
+            let boxed_recurring_sub_desc = price_overview_map.get("recurring_sub_desc");
+            if boxed_recurring_sub_desc.is_some() {
+                price_overview.recurring_sub_desc = boxed_recurring_sub_desc.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_initial_formatted = price_overview_map.get("initial_formatted");
+            if boxed_initial_formatted.is_some() {
+                price_overview.initial_formatted =  boxed_initial_formatted.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_final_formatted = price_overview_map.get("final_formatted");
+            if boxed_initial_formatted.is_some() {
+                price_overview.final_formatted =  boxed_final_formatted.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_recurring_sub = price_overview_map.get("recurring_sub");
+            if boxed_recurring_sub.is_some() {
+                price_overview.recurring_sub = boxed_recurring_sub.unwrap().as_i64().unwrap();
+            }
+
+
+            let boxed_initial = price_overview_map.get("initial");
+            if boxed_initial.is_some() {
+                price_overview.initial = boxed_initial.unwrap().as_i64().unwrap();
+            }
+
+
+            let boxed_final_price = price_overview_map.get("final");
+            if boxed_final_price.is_some() {
+                price_overview.final_price = boxed_final_price.unwrap().as_i64().unwrap();
+            }
+
+            let boxed_discount_percent = price_overview_map.get("discount_percent");
+            if boxed_discount_percent.is_some() {
+                price_overview.discount_percent = boxed_discount_percent.unwrap().as_i64().unwrap();
+            }
+
+
+            let boxed_currency = price_overview_map.get("currency");
+            if boxed_currency.is_some() {
+                price_overview.currency = boxed_currency.unwrap().as_str().unwrap().to_string();
+            }
+
+            steam_app_details.price_overview = price_overview;
+        }
+
 
         let boxed_recommendations = app_details["recommendations"].take();
         if boxed_recommendations.as_object().is_some() {
