@@ -66,6 +66,9 @@ fn test_get_cached_730() {
     assert_eq!(app.release_date.coming_soon, false);
     assert_eq!(app.release_date.date, "Aug 21, 2012");
     assert_eq!(app.recommendations.total, 3452092);
+    assert_eq!(app.platforms.windows, true);
+    assert_eq!(app.platforms.mac, true);
+    assert_eq!(app.platforms.linux, true);
 
 }
 

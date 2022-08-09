@@ -20,6 +20,7 @@ pub struct SteamAppDetails {
     pub release_date: ReleaseDate,
     pub recommendations: Recommendations,
     pub price_overview: PriceOverview,
+    pub platforms: Platforms,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -59,6 +60,13 @@ pub struct PriceOverview {
     pub final_price: i64,
     pub discount_percent: i64,
     pub currency: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Platforms {
+    pub windows: bool,
+    pub mac: bool,
+    pub linux: bool,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -157,6 +165,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             final_price: 0,
             discount_percent: 0,
             currency: "".to_string()
+        },
+        platforms: Platforms {
+            windows: false,
+            mac: false,
+            linux: false
         }
     };
 
@@ -271,6 +284,35 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             }
 
             steam_app_details.price_overview = price_overview;
+        }
+
+        let boxed_platforms = app_details["platforms"].take();
+        if boxed_platforms.as_object().is_some() {
+            let platforms_map = boxed_platforms.as_object().unwrap();
+
+            let mut platforms = Platforms {
+                windows: false,
+                mac: false,
+                linux: false
+            };
+
+            let boxed_windows = platforms_map.get("windows");
+            if boxed_windows.is_some() {
+                platforms.windows = boxed_windows.unwrap().as_bool().unwrap();
+            }
+
+            let boxed_mac = platforms_map.get("mac");
+            if boxed_mac.is_some() {
+                platforms.mac = boxed_mac.unwrap().as_bool().unwrap();
+            }
+
+            let boxed_linux = platforms_map.get("linux");
+            if boxed_linux.is_some() {
+                platforms.linux = boxed_linux.unwrap().as_bool().unwrap();
+            }
+
+
+            steam_app_details.platforms = platforms;
         }
 
 
