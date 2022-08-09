@@ -21,6 +21,9 @@ pub struct SteamAppDetails {
     pub recommendations: Recommendations,
     pub price_overview: PriceOverview,
     pub platforms: Platforms,
+    pub pc_requirements: PcRequirements,
+    pub mac_requirements: MacRequirements,
+    pub linux_requirements: LinuxRequirements,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -67,6 +70,24 @@ pub struct Platforms {
     pub windows: bool,
     pub mac: bool,
     pub linux: bool,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PcRequirements {
+    pub recommended: String,
+    pub minimum: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct MacRequirements {
+    pub recommended: String,
+    pub minimum: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct LinuxRequirements {
+    pub recommended: String,
+    pub minimum: String,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -170,6 +191,18 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             windows: false,
             mac: false,
             linux: false
+        },
+        pc_requirements: PcRequirements {
+            recommended: "".to_string(),
+            minimum: "".to_string()
+        },
+        mac_requirements: MacRequirements {
+            recommended: "".to_string(),
+            minimum: "".to_string()
+        },
+        linux_requirements: LinuxRequirements {
+            recommended: "".to_string(),
+            minimum: "".to_string()
         }
     };
 
@@ -313,6 +346,30 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
 
             steam_app_details.platforms = platforms;
+        }
+
+        let boxed_pc_requirements = app_details["pc_requirements"].take();
+        if boxed_pc_requirements.as_object().is_some() {
+            let pc_requirements_map = boxed_pc_requirements.as_object().unwrap();
+
+            let mut pc_requirements = PcRequirements {
+                recommended: "".to_string(),
+                minimum: "".to_string()
+            };
+
+            let boxed_minimum = pc_requirements_map.get("minimum");
+            if boxed_minimum.is_some() {
+                pc_requirements.minimum = boxed_minimum.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_recommended = pc_requirements_map.get("recommended");
+            if boxed_recommended.is_some() {
+                pc_requirements.recommended = boxed_recommended.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            steam_app_details.pc_requirements = pc_requirements;
         }
 
 
