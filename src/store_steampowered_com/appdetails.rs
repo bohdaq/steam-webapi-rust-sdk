@@ -397,6 +397,30 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.mac_requirements = mac_requirements;
         }
 
+        let boxed_linux_requirements = app_details["linux_requirements"].take();
+        if boxed_linux_requirements.as_object().is_some() {
+            let linux_requirements_map = boxed_linux_requirements.as_object().unwrap();
+
+            let mut linux_requirements = LinuxRequirements {
+                recommended: "".to_string(),
+                minimum: "".to_string()
+            };
+
+            let boxed_minimum = linux_requirements_map.get("minimum");
+            if boxed_minimum.is_some() {
+                linux_requirements.minimum = boxed_minimum.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_recommended = linux_requirements_map.get("recommended");
+            if boxed_recommended.is_some() {
+                linux_requirements.recommended = boxed_recommended.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            steam_app_details.linux_requirements = linux_requirements;
+        }
+
 
         let boxed_recommendations = app_details["recommendations"].take();
         if boxed_recommendations.as_object().is_some() {
