@@ -24,6 +24,7 @@ pub struct SteamAppDetails {
     pub pc_requirements: PcRequirements,
     pub mac_requirements: MacRequirements,
     pub linux_requirements: LinuxRequirements,
+    pub package_groups: PackageGroup,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -88,6 +89,30 @@ pub struct MacRequirements {
 pub struct LinuxRequirements {
     pub recommended: String,
     pub minimum: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PackageGroup {
+    pub title: String,
+    pub selection_text: String,
+    pub save_text: String,
+    pub name: String,
+    pub is_recurring_subscription: String,
+    pub display_type: String,
+    pub description: String,
+    pub subs: Vec<Sub>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Sub {
+    pub price_in_cents_with_discount: i64,
+    pub percent_savings_text: String,
+    pub percent_savings: i64,
+    pub packageid: i64,
+    pub option_text: String,
+    pub option_description: String,
+    pub is_free_license: bool,
+    pub can_get_free_license: String,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -203,6 +228,16 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         linux_requirements: LinuxRequirements {
             recommended: "".to_string(),
             minimum: "".to_string()
+        },
+        package_groups: PackageGroup {
+            title: "".to_string(),
+            selection_text: "".to_string(),
+            save_text: "".to_string(),
+            name: "".to_string(),
+            is_recurring_subscription: "".to_string(),
+            display_type: "".to_string(),
+            description: "".to_string(),
+            subs: vec![]
         }
     };
 
