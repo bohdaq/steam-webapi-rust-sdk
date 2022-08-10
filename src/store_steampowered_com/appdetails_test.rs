@@ -95,6 +95,7 @@ fn test_get_cached_730() {
     assert_eq!(app.mac_requirements.minimum, "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> MacOS X 10.11 (El Capitan) or later<br></li><li><strong>Processor:</strong> Intel Core Duo Processor (2GHz or better)<br></li><li><strong>Memory:</strong> 2 GB RAM<br></li><li><strong>Graphics:</strong> ATI Radeon HD 2400 or better / NVIDIA 8600M or better<br></li><li><strong>Storage:</strong> 15 GB available space</li></ul>");
     assert_eq!(app.package_groups.get(0).unwrap().title, "Buy Counter-Strike: Global Offensive");
     assert_eq!(app.package_groups.get(0).unwrap().selection_text, "Select a purchase option");
+    assert_eq!(app.package_groups.get(0).unwrap().name, "default");
 }
 
 #[test]
