@@ -24,7 +24,7 @@ pub struct SteamAppDetails {
     pub pc_requirements: PcRequirements,
     pub mac_requirements: MacRequirements,
     pub linux_requirements: LinuxRequirements,
-    pub package_groups: PackageGroup,
+    pub package_groups: Vec<PackageGroup>,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -229,16 +229,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             recommended: "".to_string(),
             minimum: "".to_string()
         },
-        package_groups: PackageGroup {
-            title: "".to_string(),
-            selection_text: "".to_string(),
-            save_text: "".to_string(),
-            name: "".to_string(),
-            is_recurring_subscription: "".to_string(),
-            display_type: "".to_string(),
-            description: "".to_string(),
-            subs: vec![]
-        }
+        package_groups: vec![],
     };
 
     if response_string.len() > 0 {
@@ -538,6 +529,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
         }
 
+        steam_app_details.package_groups = parse_package_groups(app_details);
+
     }
 
     let filepath = get_resource_filepath(app_id);
@@ -554,6 +547,36 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
     file.write_all(response_string.as_ref()).unwrap();
 
     Ok(steam_app_details)
+}
+
+pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
+    let mut package_group_list: Vec<PackageGroup> = vec![];
+
+    let boxed_package_groups = app_details["package_groups"].take();
+    if boxed_package_groups.as_array().is_some() {
+        let package_groups = boxed_package_groups.as_array().unwrap();
+        let mut package_group = PackageGroup {
+            title: "".to_string(),
+            selection_text: "".to_string(),
+            save_text: "".to_string(),
+            name: "".to_string(),
+            is_recurring_subscription: "".to_string(),
+            display_type: "".to_string(),
+            description: "".to_string(),
+            subs: vec![]
+        };
+
+        for package_group_map in package_groups {
+            let boxed_title = package_group_map.get("title");
+            if boxed_title.is_some() {
+                package_group.title = boxed_title.unwrap().as_str().unwrap().to_string();
+            }
+        }
+
+        package_group_list.push(package_group);
+    }
+
+    package_group_list
 }
 
 pub fn get_cache_dir_path(app_id: i64) -> String {
