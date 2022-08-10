@@ -581,6 +581,11 @@ pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
             if boxed_name.is_some() {
                 package_group.name = boxed_name.unwrap().as_str().unwrap().to_string();
             }
+
+            let boxed_save_text = package_group_map.get("save_text");
+            if boxed_save_text.is_some() {
+                package_group.save_text = boxed_save_text.unwrap().as_str().unwrap().to_string();
+            }
         }
 
         package_group_list.push(package_group);
