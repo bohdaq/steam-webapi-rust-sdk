@@ -604,6 +604,11 @@ pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
                     package_group.display_type = display_type_as_i64.unwrap().to_string();
                 }
             }
+
+            let boxed_description = package_group_map.get("description");
+            if boxed_description.is_some() {
+                package_group.description = boxed_description.unwrap().as_str().unwrap().to_string();
+            }
         }
 
         package_group_list.push(package_group);
