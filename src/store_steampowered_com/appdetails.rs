@@ -586,6 +586,11 @@ pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
             if boxed_save_text.is_some() {
                 package_group.save_text = boxed_save_text.unwrap().as_str().unwrap().to_string();
             }
+
+            let boxed_is_recurring_subscription = package_group_map.get("is_recurring_subscription");
+            if boxed_is_recurring_subscription.is_some() {
+                package_group.is_recurring_subscription = boxed_is_recurring_subscription.unwrap().as_str().unwrap().to_string();
+            }
         }
 
         package_group_list.push(package_group);

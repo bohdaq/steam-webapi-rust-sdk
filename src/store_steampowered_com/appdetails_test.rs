@@ -97,6 +97,7 @@ fn test_get_cached_730() {
     assert_eq!(app.package_groups.get(0).unwrap().selection_text, "Select a purchase option");
     assert_eq!(app.package_groups.get(0).unwrap().name, "default");
     assert_eq!(app.package_groups.get(0).unwrap().save_text, "");
+    assert_eq!(app.package_groups.get(0).unwrap().is_recurring_subscription, "false");
 }
 
 #[test]
