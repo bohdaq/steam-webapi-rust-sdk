@@ -609,12 +609,51 @@ pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
             if boxed_description.is_some() {
                 package_group.description = boxed_description.unwrap().as_str().unwrap().to_string();
             }
+
+            package_group.subs = parse_package_groups_subs(&package_group_map);
         }
 
         package_group_list.push(package_group);
     }
 
     package_group_list
+}
+
+pub fn parse_package_groups_subs(package_group: &Value) -> Vec<Sub> {
+    let mut sub_list: Vec<Sub> = vec![];
+
+    let sub_as_array = package_group.get("subs").take();
+    if sub_as_array.is_some() {
+
+        let sub_list_value = sub_as_array.unwrap().as_array().unwrap();
+
+        for sub_item in sub_list_value {
+
+            let mut sub = Sub {
+                price_in_cents_with_discount: 0,
+                percent_savings_text: "".to_string(),
+                percent_savings: 0,
+                packageid: 0,
+                option_text: "".to_string(),
+                option_description: "".to_string(),
+                is_free_license: false,
+                can_get_free_license: "".to_string()
+            };
+
+            let boxed_price_in_cents_with_discount = sub_item.get("price_in_cents_with_discount");
+            if boxed_price_in_cents_with_discount.is_some() {
+                sub.price_in_cents_with_discount = boxed_price_in_cents_with_discount.unwrap().as_i64().unwrap();
+            }
+
+            let boxed_packageid = sub_item.get("packageid");
+            if boxed_packageid.is_some() {
+                sub.packageid = boxed_packageid.unwrap().as_i64().unwrap();
+            }
+            sub_list.push(sub);
+        }
+    }
+
+    sub_list
 }
 
 pub fn get_cache_dir_path(app_id: i64) -> String {

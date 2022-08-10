@@ -99,6 +99,15 @@ fn test_get_cached_730() {
     assert_eq!(app.package_groups.get(0).unwrap().save_text, "");
     assert_eq!(app.package_groups.get(0).unwrap().is_recurring_subscription, "false");
     assert_eq!(app.package_groups.get(0).unwrap().display_type, "0");
+    assert_eq!(app.package_groups.get(0).unwrap().subs.get(0).unwrap().packageid, 298963);
+    assert_eq!(app.package_groups.get(0).unwrap().subs.get(0).unwrap().price_in_cents_with_discount, 0);
+
+    assert_eq!(app.package_groups.get(0).unwrap().subs.len(), 2);
+
+    assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().packageid, 54029);
+    assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().price_in_cents_with_discount, 1499);
+
+
 }
 
 #[test]
