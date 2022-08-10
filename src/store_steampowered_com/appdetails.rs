@@ -115,6 +115,29 @@ pub struct Sub {
     pub can_get_free_license: String,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Movie {
+    pub thumbnail: String,
+    pub name: String,
+    pub id: i64,
+    pub highlight: bool,
+    pub webm: Webm,
+    pub mp4: Mp4,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Mp4 {
+    pub max: String,
+    pub _480: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Webm {
+    pub max: String,
+    pub dash: String,
+    pub _480: String,
+}
+
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
