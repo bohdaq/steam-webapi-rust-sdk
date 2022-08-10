@@ -591,6 +591,19 @@ pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
             if boxed_is_recurring_subscription.is_some() {
                 package_group.is_recurring_subscription = boxed_is_recurring_subscription.unwrap().as_str().unwrap().to_string();
             }
+
+            let boxed_display_type = package_group_map.get("display_type");
+            if boxed_display_type.is_some() {
+                let display_type_as_str = boxed_display_type.unwrap().as_str();
+                if display_type_as_str.is_some() {
+                    package_group.display_type = display_type_as_str.unwrap().to_string();
+                }
+
+                let display_type_as_i64 = boxed_display_type.unwrap().as_i64();
+                if display_type_as_i64.is_some() {
+                    package_group.display_type = display_type_as_i64.unwrap().to_string();
+                }
+            }
         }
 
         package_group_list.push(package_group);

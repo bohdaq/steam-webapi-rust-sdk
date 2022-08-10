@@ -98,6 +98,14 @@ fn test_get_cached_730() {
     assert_eq!(app.package_groups.get(0).unwrap().name, "default");
     assert_eq!(app.package_groups.get(0).unwrap().save_text, "");
     assert_eq!(app.package_groups.get(0).unwrap().is_recurring_subscription, "false");
+    assert_eq!(app.package_groups.get(0).unwrap().display_type, "0");
+}
+
+#[test]
+fn test_get_cached_214150() {
+    let app_id = 214150;
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
+    assert_eq!(app.package_groups.get(0).unwrap().display_type, "default");
 }
 
 #[test]
