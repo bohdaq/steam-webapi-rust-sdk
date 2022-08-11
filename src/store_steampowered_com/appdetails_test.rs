@@ -126,6 +126,8 @@ fn test_get_cached_730() {
     assert_eq!(app.metacritic.score, 83);
     assert_eq!(app.metacritic.url, "https://www.metacritic.com/game/pc/counter-strike-global-offensive?ftag=MCD-06-10aaa1f");
 
+
+    assert_eq!(app.is_free, true);
 }
 
 #[test]

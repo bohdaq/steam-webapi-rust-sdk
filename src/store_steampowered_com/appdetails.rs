@@ -28,6 +28,7 @@ pub struct SteamAppDetails {
     pub movies: Vec<Movie>,
     pub metacritic: Metacritic,
     pub legal_notice: String,
+    pub is_free: bool,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -267,7 +268,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             url: "".to_string(),
             score: 0
         },
-        legal_notice: "".to_string()
+        legal_notice: "".to_string(),
+        is_free: false
     };
 
     if response_string.len() > 0 {
@@ -597,6 +599,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         let boxed_legal_notice = app_details["legal_notice"].take();
         if boxed_legal_notice.as_str().is_some() {
             steam_app_details.legal_notice = boxed_legal_notice.as_str().unwrap().to_string();
+        }
+
+        let boxed_is_free = app_details["is_free"].take();
+        if boxed_is_free.as_bool().is_some() {
+            steam_app_details.is_free = boxed_is_free.as_bool().unwrap();
         }
 
     }
