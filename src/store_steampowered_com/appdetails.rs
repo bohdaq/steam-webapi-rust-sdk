@@ -27,6 +27,7 @@ pub struct SteamAppDetails {
     pub package_groups: Vec<PackageGroup>,
     pub movies: Vec<Movie>,
     pub metacritic: Metacritic,
+    pub legal_notice: String,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -265,7 +266,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         metacritic: Metacritic {
             url: "".to_string(),
             score: 0
-        }
+        },
+        legal_notice: "".to_string()
     };
 
     if response_string.len() > 0 {
@@ -588,7 +590,13 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             if boxed_score.is_some() {
                 metacritic.score = boxed_score.unwrap().as_i64().unwrap();
             }
+
             steam_app_details.metacritic = metacritic;
+        }
+
+        let boxed_legal_notice = app_details["legal_notice"].take();
+        if boxed_legal_notice.as_str().is_some() {
+            steam_app_details.legal_notice = boxed_legal_notice.as_str().unwrap().to_string();
         }
 
     }

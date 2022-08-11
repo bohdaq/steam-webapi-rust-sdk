@@ -137,6 +137,13 @@ fn test_get_cached_214150() {
 }
 
 #[test]
+fn test_get_cached_1313() {
+    let app_id = 1313;
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
+    assert_eq!(app.legal_notice, "SiN: Gold ©2020 Night Dive Studios, Inc.");
+}
+
+#[test]
 fn test_get_cache_dir_path() {
     let app_id = 730;
     let cache_dir_path = store_steampowered_com::appdetails::get_cache_dir_path(app_id);
