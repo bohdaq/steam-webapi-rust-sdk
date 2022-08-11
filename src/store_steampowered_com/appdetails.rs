@@ -579,6 +579,37 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 }
 
 pub fn parse_movies(boxed_movies: Value) -> Vec<Movie> {
+    fn parse_webm(boxed_webm: Option<&Value>) -> Webm {
+        let mut webm = Webm {
+            max: "".to_string(),
+            dash: "".to_string(),
+            _480: "".to_string()
+        };
+
+        if boxed_webm.is_some() {
+            let webm_item = boxed_webm.unwrap();
+
+            let boxed_webm_max = webm_item.get("max");
+            if boxed_webm_max.is_some() {
+                webm.max = boxed_webm_max.unwrap().as_str().unwrap().to_string();
+            }
+
+            let boxed_webm_dash = webm_item.get("dash");
+            if boxed_webm_dash.is_some() {
+                webm.dash = boxed_webm_dash.unwrap().as_str().unwrap().to_string();
+            }
+
+            let boxed_webm_480 = webm_item.get("480");
+            if boxed_webm_480.is_some() {
+                webm._480 = boxed_webm_480.unwrap().as_str().unwrap().to_string();
+            }
+
+        }
+
+        webm
+    }
+
+
     let mut movie_list: Vec<Movie> = vec![];
 
     if boxed_movies.as_array().is_some() {
@@ -619,6 +650,10 @@ pub fn parse_movies(boxed_movies: Value) -> Vec<Movie> {
             if boxed_highlight.is_some() {
                 movie.highlight = boxed_highlight.unwrap().as_bool().unwrap();
             }
+
+            let boxed_webm = movie_item.get("webm");
+            movie.webm = parse_webm(boxed_webm);
+
             movie_list.push(movie);
         }
 
