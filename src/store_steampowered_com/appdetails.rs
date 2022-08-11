@@ -30,7 +30,7 @@ pub struct SteamAppDetails {
     pub legal_notice: String,
     pub is_free: bool,
     pub(crate) detailed_description: String,
-    pub(crate) header_image: String,
+    pub header_image: String,
     pub(crate) website: String,
 }
 
