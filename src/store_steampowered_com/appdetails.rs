@@ -25,6 +25,7 @@ pub struct SteamAppDetails {
     pub mac_requirements: MacRequirements,
     pub linux_requirements: LinuxRequirements,
     pub package_groups: Vec<PackageGroup>,
+    pub movies: Vec<Movie>,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -253,6 +254,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             minimum: "".to_string()
         },
         package_groups: vec![],
+        movies: vec![]
     };
 
     if response_string.len() > 0 {
