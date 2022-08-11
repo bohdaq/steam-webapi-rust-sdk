@@ -26,6 +26,7 @@ pub struct SteamAppDetails {
     pub linux_requirements: LinuxRequirements,
     pub package_groups: Vec<PackageGroup>,
     pub movies: Vec<Movie>,
+    pub metacritic: Metacritic,
     pub(crate) detailed_description: String,
     pub(crate) header_image: String,
     pub(crate) website: String,
@@ -137,6 +138,12 @@ pub struct Webm {
     pub max: String,
     pub dash: String,
     pub _480: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Metacritic {
+    pub url: String,
+    pub score: i64,
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -254,7 +261,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             minimum: "".to_string()
         },
         package_groups: vec![],
-        movies: vec![]
+        movies: vec![],
+        metacritic: Metacritic {
+            url: "".to_string(),
+            score: 0
+        }
     };
 
     if response_string.len() > 0 {
@@ -559,6 +570,26 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
         let boxed_movies = app_details["movies"].take();
         steam_app_details.movies = parse_movies(boxed_movies);
+
+        let boxed_metacritic = app_details["metacritic"].take();
+        if boxed_metacritic.as_object().is_some() {
+            let metacritic_map = boxed_metacritic.as_object().unwrap();
+            let mut metacritic = Metacritic {
+                url: "".to_string(),
+                score: 0
+            };
+
+            let boxed_url = metacritic_map.get("url");
+            if boxed_url.is_some() {
+                metacritic.url = boxed_url.unwrap().as_str().unwrap().to_string();
+            }
+
+            let boxed_score = metacritic_map.get("score");
+            if boxed_score.is_some() {
+                metacritic.score = boxed_score.unwrap().as_i64().unwrap();
+            }
+            steam_app_details.metacritic = metacritic;
+        }
 
     }
 
