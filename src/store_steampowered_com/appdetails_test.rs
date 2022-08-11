@@ -107,6 +107,11 @@ fn test_get_cached_730() {
     assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().packageid, 54029);
     assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().price_in_cents_with_discount, 1499);
 
+    assert_eq!(app.movies.get(0).unwrap().thumbnail, "https://cdn.akamai.steamstatic.com/steam/apps/81958/movie.293x165.jpg?t=1554409259");
+    assert_eq!(app.movies.get(0).unwrap().name, "CS:GO Trailer Long");
+    assert_eq!(app.movies.get(0).unwrap().id, 81958);
+    assert_eq!(app.movies.get(0).unwrap().highlight, true);
+    assert_eq!(app.movies.len(), 8);
 
 }
 

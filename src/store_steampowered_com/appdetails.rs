@@ -554,7 +554,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.detailed_description = boxed_detailed_description.as_str().unwrap().to_string();
         }
 
-        steam_app_details.package_groups = parse_package_groups(app_details);
+        let boxed_package_groups = app_details["package_groups"].take();
+        steam_app_details.package_groups = parse_package_groups(boxed_package_groups);
+
+        let boxed_movies = app_details["movies"].take();
+        steam_app_details.movies = parse_movies(boxed_movies);
 
     }
 
@@ -574,10 +578,58 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
     Ok(steam_app_details)
 }
 
-pub fn parse_package_groups(mut app_details: Value) -> Vec<PackageGroup> {
+pub fn parse_movies(boxed_movies: Value) -> Vec<Movie> {
+    let mut movie_list: Vec<Movie> = vec![];
+
+    if boxed_movies.as_array().is_some() {
+        let movies_list_as_json_array = boxed_movies.as_array().unwrap();
+
+        for movie_item in movies_list_as_json_array {
+            let mut movie = Movie{
+                thumbnail: "".to_string(),
+                name: "".to_string(),
+                id: 0,
+                highlight: false,
+                webm: Webm {
+                    max: "".to_string(),
+                    dash: "".to_string(),
+                    _480: "".to_string()
+                },
+                mp4: Mp4 {
+                    max: "".to_string(),
+                    _480: "".to_string() }
+            };
+
+            let boxed_thumbnail = movie_item.get("thumbnail");
+            if boxed_thumbnail.is_some() {
+                movie.thumbnail = boxed_thumbnail.unwrap().as_str().unwrap().to_string();
+            }
+
+            let boxed_name = movie_item.get("name");
+            if boxed_name.is_some() {
+                movie.name = boxed_name.unwrap().as_str().unwrap().to_string();
+            }
+
+            let boxed_id = movie_item.get("id");
+            if boxed_id.is_some() {
+                movie.id = boxed_id.unwrap().as_i64().unwrap();
+            }
+
+            let boxed_highlight = movie_item.get("highlight");
+            if boxed_highlight.is_some() {
+                movie.highlight = boxed_highlight.unwrap().as_bool().unwrap();
+            }
+            movie_list.push(movie);
+        }
+
+    }
+
+    movie_list
+}
+
+pub fn parse_package_groups(boxed_package_groups: Value) -> Vec<PackageGroup> {
     let mut package_group_list: Vec<PackageGroup> = vec![];
 
-    let boxed_package_groups = app_details["package_groups"].take();
     if boxed_package_groups.as_array().is_some() {
         let package_groups = boxed_package_groups.as_array().unwrap();
         let mut package_group = PackageGroup {
