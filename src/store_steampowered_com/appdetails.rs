@@ -609,6 +609,31 @@ pub fn parse_movies(boxed_movies: Value) -> Vec<Movie> {
         webm
     }
 
+    fn parse_mp4(boxed_mp4: Option<&Value>) -> Mp4 {
+        let mut mp4 = Mp4 {
+            max: "".to_string(),
+            _480: "".to_string()
+        };
+
+        if boxed_mp4.is_some() {
+            let webm_item = boxed_mp4.unwrap();
+
+            let boxed_webm_max = webm_item.get("max");
+            if boxed_webm_max.is_some() {
+                mp4.max = boxed_webm_max.unwrap().as_str().unwrap().to_string();
+            }
+
+
+            let boxed_webm_480 = webm_item.get("480");
+            if boxed_webm_480.is_some() {
+                mp4._480 = boxed_webm_480.unwrap().as_str().unwrap().to_string();
+            }
+
+        }
+
+        mp4
+    }
+
 
     let mut movie_list: Vec<Movie> = vec![];
 
@@ -653,6 +678,9 @@ pub fn parse_movies(boxed_movies: Value) -> Vec<Movie> {
 
             let boxed_webm = movie_item.get("webm");
             movie.webm = parse_webm(boxed_webm);
+
+            let boxed_mp4 = movie_item.get("mp4");
+            movie.mp4 = parse_mp4(boxed_mp4);
 
             movie_list.push(movie);
         }

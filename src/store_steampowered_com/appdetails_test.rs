@@ -118,6 +118,10 @@ fn test_get_cached_730() {
     assert_eq!(app.movies.get(0).unwrap().webm.dash, "");
     assert_eq!(app.movies.get(0).unwrap().webm.max, "http://cdn.akamai.steamstatic.com/steam/apps/81958/movie_max.webm?t=1554409259");
 
+
+    assert_eq!(app.movies.get(0).unwrap().mp4._480, "http://cdn.akamai.steamstatic.com/steam/apps/81958/movie480.mp4?t=1554409259");
+    assert_eq!(app.movies.get(0).unwrap().mp4.max, "http://cdn.akamai.steamstatic.com/steam/apps/81958/movie_max.mp4?t=1554409259");
+
 }
 
 #[test]
