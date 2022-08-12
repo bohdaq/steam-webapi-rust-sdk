@@ -163,6 +163,20 @@ fn test_get_cached_1313() {
 }
 
 #[test]
+fn test_get_cached_12210() {
+    let app_id = 12210;
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
+    assert_eq!(app.ext_user_account_notice, "Rockstar Games Social Club ");
+}
+
+#[test]
+fn test_get_cached_7530() {
+    let app_id = 7530;
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
+    assert_eq!(app.drm_notice, "Reality Pump<br>no machine activation limit");
+}
+
+#[test]
 fn test_get_cache_dir_path() {
     let app_id = 730;
     let cache_dir_path = store_steampowered_com::appdetails::get_cache_dir_path(app_id);

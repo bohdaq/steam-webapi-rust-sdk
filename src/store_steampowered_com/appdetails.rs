@@ -31,7 +31,9 @@ pub struct SteamAppDetails {
     pub is_free: bool,
     pub genres: Vec<Genre>,
     pub fullgame: FullGame,
-    pub(crate) detailed_description: String,
+    pub ext_user_account_notice: String,
+    pub drm_notice: String,
+    pub detailed_description: String,
     pub header_image: String,
     pub(crate) website: String,
 }
@@ -288,7 +290,9 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         fullgame: FullGame {
             name: "".to_string(),
             appid: "".to_string()
-        }
+        },
+        ext_user_account_notice: "".to_string(),
+        drm_notice: "".to_string()
     };
 
     if response_string.len() > 0 {
@@ -671,6 +675,17 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
             steam_app_details.fullgame = fullgame;
         }
+
+        let boxed_ext_user_account_notice = app_details["ext_user_account_notice"].take();
+        if boxed_ext_user_account_notice.as_str().is_some() {
+            steam_app_details.ext_user_account_notice = boxed_ext_user_account_notice.as_str().unwrap().to_string();
+        }
+
+        let boxed_drm_notice = app_details["drm_notice"].take();
+        if boxed_drm_notice.as_str().is_some() {
+            steam_app_details.drm_notice = boxed_drm_notice.as_str().unwrap().to_string();
+        }
+
     }
 
     let filepath = get_resource_filepath(app_id);
