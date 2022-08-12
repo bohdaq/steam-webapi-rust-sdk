@@ -21,11 +21,8 @@ pub mod store_steampowered_com;
 #[cfg(test)]
 mod lib_test;
 
-/// Retrieves details for the given app id. First tries to get it from the local cache,
-/// if not present will make an API call to Steam and cache response. It may return an error
-/// if API responded with error response. As an example it may be exceeding the limit of calls
-/// from one IP address or if the response contains not valid UTF-8 characters.
-/// Usually Steam API allows 200 requests from single IP address within 5 minutes range.
+/// Retrieves details for the given app id from the local cache. It may return an error
+/// if requested resource is absent, malformed or not readable from local cache.
 ///
 /// # Examples
 ///
@@ -40,12 +37,6 @@ mod lib_test;
 ///     let error_message = boxed_result.err().unwrap();
 ///     println!("{} {}", error_message, app_id);
 ///
-///     let is_steam_unsuccessful_response = error_message == "steampowered api returned failed response";
-///     let is_invalid_utf8_sequence = error_message == "invalid utf-8 sequence";
-///     let no_response_from_api = error_message == "no response from API";
-///     let exceeded_api_calls_limit = (!is_steam_unsuccessful_response && !is_invalid_utf8_sequence) || no_response_from_api;
-///
-///     // you can do a retry or continue execution...
 /// };
 /// ```
 pub fn get_cached_app_details(app_id: i64) -> Result<SteamAppDetails, String> {

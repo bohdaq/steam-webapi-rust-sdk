@@ -45,3 +45,25 @@ fn test_get_cached_app_list() {
 
     assert!(steam_app.name.len() > 0);
 }
+
+#[test]
+fn test_details_on_cached_resources() {
+    let boxed_steam_app_list = get_cached_app_list();
+    assert!(boxed_steam_app_list.is_ok());
+
+    let steam_app_list = boxed_steam_app_list.unwrap();
+    for steam_app in steam_app_list {
+        let app_id = steam_app.appid;
+
+        let boxed_result = get_cached_app_details(app_id);
+        if boxed_result.is_ok() {
+            let app_details = boxed_result.unwrap();
+            // println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
+            
+        } else {
+            let error_message = boxed_result.err().unwrap();
+            println!("{} {}", error_message, app_id);
+
+        };
+    }
+}

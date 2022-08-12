@@ -220,7 +220,7 @@ pub fn get_cached(app_id: i64) -> Result<SteamAppDetails, String> {
         let cached_api_response = boxed_read.unwrap();
         parse_api_call_result(cached_api_response, app_id)
     } else {
-        get(app_id)
+        Err("Cached resource not readable. Consider use get call to retrieve data from steam api".to_string())
     }
 
 }
@@ -591,7 +591,10 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
         let boxed_required_age = app_details["required_age"].take();
         if boxed_required_age.as_str().is_some() {
-            steam_app_details.required_age = boxed_required_age.as_str().unwrap().parse().unwrap();
+            let boxed_parse = boxed_required_age.as_str().unwrap().parse();
+            if boxed_parse.is_ok() {
+                steam_app_details.required_age = boxed_parse.unwrap();
+            }
         }
         if boxed_required_age.as_i64().is_some() {
             steam_app_details.required_age = boxed_required_age.as_i64().unwrap();
