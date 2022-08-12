@@ -159,6 +159,13 @@ fn test_get_cached_730() {
 
     assert_eq!(app.background_raw, "https://cdn.akamai.steamstatic.com/steam/apps/730/page_bg_generated.jpg?t=1641233427");
     assert_eq!(app.background, "https://cdn.akamai.steamstatic.com/steam/apps/730/page_bg_generated_v6b.jpg?t=1641233427");
+
+    assert_eq!(app.achievements.total, 167);
+    assert_eq!(app.achievements.highlighted.len(), 10);
+    assert_eq!(app.achievements.highlighted.get(0).unwrap().path, "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/730/9f60ea3c56b4ab248ab598bbd62568b953116301.jpg");
+    assert_eq!(app.achievements.highlighted.get(0).unwrap().name, "Someone Set Up Us The Bomb");
+    assert_eq!(app.achievements.highlighted.get(9).unwrap().path, "https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/730/648550738f4845f12aa686a1b4ee8c4a51ec2348.jpg");
+    assert_eq!(app.achievements.highlighted.get(9).unwrap().name, "Short Fuse");
 }
 
 #[test]

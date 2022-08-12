@@ -44,6 +44,7 @@ pub struct SteamAppDetails {
     pub background: String,
     pub alternate_appid: String,
     pub about_the_game: String,
+    pub achievements: Achievement,
 }
 
 #[derive(Deserialize, Debug)]
@@ -189,6 +190,18 @@ pub struct Category {
     pub description: String,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Achievement {
+    pub total: i64,
+    pub highlighted: Vec<Highlight>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Highlight {
+    pub path: String,
+    pub name: String,
+}
+
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
@@ -325,7 +338,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         },
         ext_user_account_notice: "".to_string(),
         drm_notice: "".to_string(),
-        about_the_game: "".to_string()
+        about_the_game: "".to_string(),
+        achievements: Achievement {
+            total: 0, highlighted:
+            vec![]
+        },
     };
 
     if response_string.len() > 0 {
@@ -806,6 +823,44 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         let boxed_about_the_game = app_details["about_the_game"].take();
         if boxed_about_the_game.as_str().is_some() {
             steam_app_details.about_the_game = boxed_about_the_game.as_str().unwrap().to_string();
+        }
+
+        let boxed_achievements = app_details["achievements"].take();
+        if boxed_achievements.as_object().is_some() {
+            let achievements_json = boxed_achievements.as_object().unwrap();
+            let mut achievement = Achievement{ total: 0, highlighted: vec![] };
+
+            let boxed_total = achievements_json.get("total");
+            if boxed_total.is_some() {
+                achievement.total = boxed_total.unwrap().as_i64().unwrap();
+            }
+
+            let boxed_highlighted = achievements_json.get("highlighted");
+            if boxed_highlighted.is_some() {
+                let boxed_highlighted_json_array = boxed_highlighted.unwrap().as_array();
+                if boxed_highlighted_json_array.is_some() {
+                    let highlighted_json_array = boxed_highlighted_json_array.unwrap();
+
+                    let mut highlighted_list : Vec<Highlight> = vec![];
+                    for highlighted_item in highlighted_json_array {
+                        let mut highlight = Highlight{ path: "".to_string(), name: "".to_string() };
+
+                        let boxed_path = highlighted_item.get("path");
+                        if boxed_path.is_some() {
+                            highlight.path = boxed_path.unwrap().as_str().unwrap().to_string();
+                        }
+
+                        let boxed_highlight_name = highlighted_item.get("name");
+                        if boxed_highlight_name.is_some() {
+                            highlight.name = boxed_highlight_name.unwrap().as_str().unwrap().to_string();
+                        }
+
+                        highlighted_list.push(highlight);
+                    }
+                    achievement.highlighted = highlighted_list;
+                }
+            }
+            steam_app_details.achievements = achievement;
         }
 
     }
