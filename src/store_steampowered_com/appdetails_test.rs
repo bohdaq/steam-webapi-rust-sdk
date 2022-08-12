@@ -157,6 +157,8 @@ fn test_get_cached_730() {
     assert_eq!(app.categories.get(10).unwrap().id, 43);
 
 
+    assert_eq!(app.background_raw, "https://cdn.akamai.steamstatic.com/steam/apps/730/page_bg_generated.jpg?t=1641233427");
+    assert_eq!(app.background, "https://cdn.akamai.steamstatic.com/steam/apps/730/page_bg_generated_v6b.jpg?t=1641233427");
 }
 
 #[test]
@@ -165,6 +167,13 @@ fn test_get_cached_214150() {
     let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
     assert_eq!(app.package_groups.get(0).unwrap().display_type, "default");
     assert_eq!(app.package_groups.get(0).unwrap().description, "");
+}
+
+#[test]
+fn test_get_cached_21979() {
+    let app_id = 21979;
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
+    assert_eq!(app.alternate_appid, "21970");
 }
 
 #[test]

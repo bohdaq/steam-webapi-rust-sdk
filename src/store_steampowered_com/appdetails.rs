@@ -39,7 +39,11 @@ pub struct SteamAppDetails {
     pub controller_support: String,
     pub content_descriptors: ContentDescriptors,
     pub categories: Vec<Category>,
-    pub(crate) website: String,
+    pub website: String,
+    pub background_raw: String,
+    pub background: String,
+    pub alternate_appid: String,
+    pub about_the_game: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -268,6 +272,9 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         content_descriptors: ContentDescriptors { notes: "".to_string() },
         categories: vec![],
         website: "".to_string(),
+        background_raw: "".to_string(),
+        background: "".to_string(),
+        alternate_appid: "".to_string(),
         required_age: 0,
         release_date: ReleaseDate {
             date: "".to_string(),
@@ -317,7 +324,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             appid: "".to_string()
         },
         ext_user_account_notice: "".to_string(),
-        drm_notice: "".to_string()
+        drm_notice: "".to_string(),
+        about_the_game: "".to_string()
     };
 
     if response_string.len() > 0 {
@@ -751,7 +759,10 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
 
             let boxed_notes = content_descriptors_json.get("notes");
             if boxed_notes.is_some() {
-                content_descriptors.notes = boxed_notes.unwrap().as_str().unwrap().to_string();
+                let unwrapped_notes = boxed_notes.unwrap();
+                if unwrapped_notes.as_str().is_some() {
+                    content_descriptors.notes = unwrapped_notes.as_str().unwrap().to_string();
+                }
             }
             steam_app_details.content_descriptors = content_descriptors;
         }
@@ -775,6 +786,26 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
                 category_list.push(category);
             }
             steam_app_details.categories = category_list;
+        }
+
+        let boxed_background_raw = app_details["background_raw"].take();
+        if boxed_background_raw.as_str().is_some() {
+            steam_app_details.background_raw = boxed_background_raw.as_str().unwrap().to_string();
+        }
+
+        let boxed_background = app_details["background"].take();
+        if boxed_background.as_str().is_some() {
+            steam_app_details.background = boxed_background.as_str().unwrap().to_string();
+        }
+
+        let boxed_alternate_appid = app_details["alternate_appid"].take();
+        if boxed_alternate_appid.as_str().is_some() {
+            steam_app_details.alternate_appid = boxed_alternate_appid.as_str().unwrap().to_string();
+        }
+
+        let boxed_about_the_game = app_details["about_the_game"].take();
+        if boxed_about_the_game.as_str().is_some() {
+            steam_app_details.about_the_game = boxed_about_the_game.as_str().unwrap().to_string();
         }
 
     }
