@@ -30,6 +30,7 @@ pub struct SteamAppDetails {
     pub legal_notice: String,
     pub is_free: bool,
     pub genres: Vec<Genre>,
+    pub fullgame: FullGame,
     pub(crate) detailed_description: String,
     pub header_image: String,
     pub(crate) website: String,
@@ -155,6 +156,12 @@ pub struct Genre {
     pub description: String
 }
 
+#[derive(Deserialize, Debug)]
+pub struct FullGame {
+    pub name: String,
+    pub appid: String
+}
+
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
@@ -277,7 +284,11 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         },
         legal_notice: "".to_string(),
         is_free: false,
-        genres: vec![]
+        genres: vec![],
+        fullgame: FullGame {
+            name: "".to_string(),
+            appid: "".to_string()
+        }
     };
 
     if response_string.len() > 0 {
@@ -639,6 +650,27 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             steam_app_details.genres = genre_list;
         }
 
+        let boxed_fullgame = app_details["fullgame"].take();
+        if boxed_fullgame.as_object().is_some() {
+            let fullgame_item = boxed_fullgame.as_object().unwrap();
+
+            let mut fullgame = FullGame{
+                name: "".to_string(),
+                appid: "".to_string()
+            };
+
+            let boxed_name = fullgame_item.get("name");
+            if boxed_name.is_some() {
+                fullgame.name = boxed_name.unwrap().as_str().unwrap().to_string();
+            }
+
+            let boxed_appid = fullgame_item.get("appid");
+            if boxed_appid.is_some() {
+                fullgame.appid = boxed_appid.unwrap().as_str().unwrap().to_string();
+            }
+
+            steam_app_details.fullgame = fullgame;
+        }
     }
 
     let filepath = get_resource_filepath(app_id);

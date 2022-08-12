@@ -148,6 +148,14 @@ fn test_get_cached_214150() {
 }
 
 #[test]
+fn test_get_cached_219() {
+    let app_id = 219;
+    let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
+    assert_eq!(app.fullgame.name, "Half-Life 2");
+    assert_eq!(app.fullgame.appid, "220");
+}
+
+#[test]
 fn test_get_cached_1313() {
     let app_id = 1313;
     let app = store_steampowered_com::appdetails::get_cached(app_id).unwrap();
