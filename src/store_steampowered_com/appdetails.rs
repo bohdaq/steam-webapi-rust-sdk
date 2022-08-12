@@ -38,6 +38,7 @@ pub struct SteamAppDetails {
     pub demos: Vec<Demo>,
     pub controller_support: String,
     pub content_descriptors: ContentDescriptors,
+    pub categories: Vec<Category>,
     pub(crate) website: String,
 }
 
@@ -178,6 +179,12 @@ pub struct ContentDescriptors {
     pub notes: String,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Category {
+    pub id: i64,
+    pub description: String,
+}
+
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
@@ -259,6 +266,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         demos: vec![],
         controller_support: "".to_string(),
         content_descriptors: ContentDescriptors { notes: "".to_string() },
+        categories: vec![],
         website: "".to_string(),
         required_age: 0,
         release_date: ReleaseDate {
@@ -746,6 +754,27 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
                 content_descriptors.notes = boxed_notes.unwrap().as_str().unwrap().to_string();
             }
             steam_app_details.content_descriptors = content_descriptors;
+        }
+
+        let boxed_categories = app_details["categories"].take();
+        if boxed_categories.as_array().is_some() {
+            let mut category_list : Vec<Category> = vec![];
+            let category_json_list = boxed_categories.as_array().unwrap();
+            for category_item in category_json_list {
+                let mut category = Category { id: 0, description: "".to_string() };
+
+                let boxed_id = category_item.get("id");
+                if boxed_id.is_some() {
+                    category.id = boxed_id.unwrap().as_i64().unwrap();
+                }
+
+                let boxed_description = category_item.get("description");
+                if boxed_description.is_some() {
+                    category.description = boxed_description.unwrap().as_str().unwrap().to_string();
+                }
+                category_list.push(category);
+            }
+            steam_app_details.categories = category_list;
         }
 
     }

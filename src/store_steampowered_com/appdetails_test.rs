@@ -150,6 +150,13 @@ fn test_get_cached_730() {
 
     assert_eq!(app.controller_support, "full");
 
+    assert_eq!(app.categories.get(0).unwrap().description, "Multi-player");
+    assert_eq!(app.categories.get(0).unwrap().id, 1);
+    assert_eq!(app.categories.len(), 11);
+    assert_eq!(app.categories.get(10).unwrap().description, "Remote Play on TV");
+    assert_eq!(app.categories.get(10).unwrap().id, 43);
+
+
 }
 
 #[test]
