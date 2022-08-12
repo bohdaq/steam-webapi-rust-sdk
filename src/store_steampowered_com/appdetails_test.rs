@@ -19,6 +19,16 @@ fn test_get_2210() {
 }
 
 #[test]
+fn test_get_220() {
+    let app_id = 220;
+    let app = store_steampowered_com::appdetails::get(app_id).unwrap();
+
+    assert_eq!(app.demos.len(), 1);
+    assert_eq!(app.demos.get(0).unwrap().appid, 219);
+    assert_eq!(app.demos.get(0).unwrap().description, "");
+}
+
+#[test]
 fn test_get_1070410() {
     let app_id = 1070410;
     let app = store_steampowered_com::appdetails::get(app_id).unwrap();

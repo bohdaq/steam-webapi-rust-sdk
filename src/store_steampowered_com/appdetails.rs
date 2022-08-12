@@ -35,6 +35,7 @@ pub struct SteamAppDetails {
     pub drm_notice: String,
     pub detailed_description: String,
     pub header_image: String,
+    pub demos: Vec<Demo>,
     pub(crate) website: String,
 }
 
@@ -164,6 +165,12 @@ pub struct FullGame {
     pub appid: String
 }
 
+#[derive(Deserialize, Debug)]
+pub struct Demo {
+    pub description: String,
+    pub appid: i64
+}
+
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
@@ -242,6 +249,7 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         detailed_description: "".to_string(),
         reviews: "".to_string(),
         header_image: "".to_string(),
+        demos: vec![],
         website: "".to_string(),
         required_age: 0,
         release_date: ReleaseDate {
@@ -684,6 +692,32 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         let boxed_drm_notice = app_details["drm_notice"].take();
         if boxed_drm_notice.as_str().is_some() {
             steam_app_details.drm_notice = boxed_drm_notice.as_str().unwrap().to_string();
+        }
+
+        let boxed_demos = app_details["demos"].take();
+        if boxed_demos.as_array().is_some() {
+            let mut demo_list: Vec<Demo> = vec![];
+
+            let demos_json_array = boxed_demos.as_array().unwrap();
+            for demo_json_item in demos_json_array {
+                let mut demo = Demo {
+                    description: "".to_string(),
+                    appid: 0,
+                };
+
+                let boxed_description = demo_json_item.get("description");
+                if boxed_description.is_some() {
+                    demo.description = boxed_description.unwrap().as_str().unwrap().to_string();
+                }
+
+                let boxed_appid = demo_json_item.get("appid");
+                if boxed_appid.is_some() {
+                    demo.appid = boxed_appid.unwrap().as_i64().unwrap();
+                }
+
+                demo_list.push(demo);
+            }
+            steam_app_details.demos = demo_list;
         }
 
     }
