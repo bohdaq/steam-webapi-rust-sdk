@@ -128,6 +128,15 @@ fn test_get_cached_730() {
 
 
     assert_eq!(app.is_free, true);
+
+    assert_eq!(app.genres.get(0).unwrap().id, "1");
+    assert_eq!(app.genres.get(0).unwrap().description, "Action");
+
+    assert_eq!(app.genres.get(1).unwrap().id, "37");
+    assert_eq!(app.genres.get(1).unwrap().description, "Free to Play");
+
+    assert_eq!(app.genres.len(), 2);
+
 }
 
 #[test]

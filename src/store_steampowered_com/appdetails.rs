@@ -29,6 +29,7 @@ pub struct SteamAppDetails {
     pub metacritic: Metacritic,
     pub legal_notice: String,
     pub is_free: bool,
+    pub genres: Vec<Genre>,
     pub(crate) detailed_description: String,
     pub header_image: String,
     pub(crate) website: String,
@@ -146,6 +147,12 @@ pub struct Webm {
 pub struct Metacritic {
     pub url: String,
     pub score: i64,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Genre {
+    pub id: String,
+    pub description: String
 }
 
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
@@ -269,7 +276,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
             score: 0
         },
         legal_notice: "".to_string(),
-        is_free: false
+        is_free: false,
+        genres: vec![]
     };
 
     if response_string.len() > 0 {
@@ -604,6 +612,31 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         let boxed_is_free = app_details["is_free"].take();
         if boxed_is_free.as_bool().is_some() {
             steam_app_details.is_free = boxed_is_free.as_bool().unwrap();
+        }
+
+        let boxed_genres = app_details["genres"].take();
+        if boxed_genres.as_array().is_some() {
+            let mut genre_list: Vec<Genre> = vec![];
+            let genre_list_value = boxed_genres.as_array().unwrap();
+            for genre_item in genre_list_value {
+                let mut genre = Genre {
+                    id: "".to_string(),
+                    description: "".to_string()
+                };
+
+                let boxed_id = genre_item.get("id");
+                if boxed_id.is_some() {
+                    genre.id = boxed_id.unwrap().as_str().unwrap().to_string();
+                }
+
+                let boxed_description = genre_item.get("description");
+                if boxed_description.is_some() {
+                    genre.description = boxed_description.unwrap().as_str().unwrap().to_string();
+                }
+
+                genre_list.push(genre);
+            }
+            steam_app_details.genres = genre_list;
         }
 
     }
