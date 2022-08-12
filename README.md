@@ -10,7 +10,7 @@ There is already prebuilt cache for all steam apps, in order to use it,
 simply clone [steam-webapi-cache](https://github.com/bohdaq/steam-webapi-cache) 
 into the root folder of your project.
 
-## Features (as of version 0.0.1)
+## Features
 1. Ability to get list of apps available on the Steam.
 2. Ability to get detailed app description from Steam.
 3. Local cache of the app details.
