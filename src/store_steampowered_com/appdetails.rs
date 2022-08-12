@@ -36,6 +36,8 @@ pub struct SteamAppDetails {
     pub detailed_description: String,
     pub header_image: String,
     pub demos: Vec<Demo>,
+    pub controller_support: String,
+    pub content_descriptors: ContentDescriptors,
     pub(crate) website: String,
 }
 
@@ -171,6 +173,11 @@ pub struct Demo {
     pub appid: i64
 }
 
+#[derive(Deserialize, Debug)]
+pub struct ContentDescriptors {
+    pub notes: String,
+}
+
 pub fn get(app_id: i64) -> Result<SteamAppDetails, String> {
     let api_response_boxed = make_api_call(app_id);
     if api_response_boxed.is_err() {
@@ -250,6 +257,8 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
         reviews: "".to_string(),
         header_image: "".to_string(),
         demos: vec![],
+        controller_support: "".to_string(),
+        content_descriptors: ContentDescriptors { notes: "".to_string() },
         website: "".to_string(),
         required_age: 0,
         release_date: ReleaseDate {
@@ -718,6 +727,25 @@ pub fn parse_api_call_result(response_string: String, app_id: i64) -> Result<Ste
                 demo_list.push(demo);
             }
             steam_app_details.demos = demo_list;
+
+        }
+
+        let boxed_controller_support = app_details["controller_support"].take();
+        if boxed_controller_support.as_str().is_some() {
+            steam_app_details.controller_support = boxed_controller_support.as_str().unwrap().to_string();
+        }
+
+        let boxed_content_descriptors = app_details["content_descriptors"].take();
+        if boxed_content_descriptors.as_object().is_some() {
+            let content_descriptors_json = boxed_content_descriptors.as_object().unwrap();
+
+            let mut content_descriptors = ContentDescriptors{ notes: "".to_string() };
+
+            let boxed_notes = content_descriptors_json.get("notes");
+            if boxed_notes.is_some() {
+                content_descriptors.notes = boxed_notes.unwrap().as_str().unwrap().to_string();
+            }
+            steam_app_details.content_descriptors = content_descriptors;
         }
 
     }

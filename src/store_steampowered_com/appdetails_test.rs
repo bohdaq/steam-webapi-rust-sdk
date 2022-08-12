@@ -57,6 +57,7 @@ fn test_get_550() {
 
     assert_eq!(app.pc_requirements.recommended, "<strong>Recommended:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows® 7 32/64-bit / Vista 32/64 / XP<br></li><li><strong>Processor:</strong> Intel core 2 duo 2.4GHz<br></li><li><strong>Memory:</strong> 2 GB RAM<br></li><li><strong>Graphics:</strong> Video Card Shader model 3.0. NVidia 7600, ATI X1600 or better<br></li><li><strong>DirectX:</strong> Version 9.0c<br></li><li><strong>Storage:</strong> 13 GB available space<br></li><li><strong>Sound Card:</strong> DirectX 9.0c compatible sound card</li></ul>");
     assert_eq!(app.pc_requirements.minimum, "<strong>Minimum:</strong><br><ul class=\"bb_ul\"><li><strong>OS:</strong> Windows® 7 32/64-bit / Vista 32/64 / XP<br></li><li><strong>Processor:</strong> Pentium 4 3.0GHz<br></li><li><strong>Memory:</strong> 2 GB RAM<br></li><li><strong>Graphics:</strong> Video card with 128 MB, Shader model 2.0. ATI X800, NVidia 6600 or better<br></li><li><strong>DirectX:</strong> Version 9.0c<br></li><li><strong>Storage:</strong> 13 GB available space<br></li><li><strong>Sound Card:</strong> DirectX 9.0c compatible sound card</li></ul>");
+    assert_eq!(app.content_descriptors.notes, "Left 4 Dead 2 features intense violence, blood and gore (including decapitation or dismemberment of zombie-like creatures) and some strong language.");
 }
 
 #[test]
@@ -146,6 +147,8 @@ fn test_get_cached_730() {
     assert_eq!(app.genres.get(1).unwrap().description, "Free to Play");
 
     assert_eq!(app.genres.len(), 2);
+
+    assert_eq!(app.controller_support, "full");
 
 }
 
