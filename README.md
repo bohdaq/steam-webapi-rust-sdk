@@ -35,8 +35,11 @@ into the root folder of your project.
 > $ git clone git@github.com:bohdaq/steam-webapi-cache.git
 
 ## Demo
-Simple [demo app to retrieve details for all apps](https://github.com/bohdaq/retrieve-all-steam-apps-details-demo-app) 
+
+App to [retrieve details for all apps](https://github.com/bohdaq/retrieve-all-steam-apps-details-demo-app) 
 available on Steam store.
+
+App to [list all properties in app details response API](https://github.com/bohdaq/list-steam-appdetails-properties) on Steam store.
 
 ## Documentation
 Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.1/steam_webapi_rust_sdk/).
