@@ -58,7 +58,7 @@ fn test_details_on_cached_resources() {
         let boxed_result = get_cached_app_details(app_id);
         if boxed_result.is_ok() {
             let app_details = boxed_result.unwrap();
-            // println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
+            println!("result is ok for {} app id {}", app_details.name, app_details.app_id);
             
         } else {
             let error_message = boxed_result.err().unwrap();
