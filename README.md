@@ -42,7 +42,7 @@ available on Steam store.
 App to [list all properties in app details response API](https://github.com/bohdaq/list-steam-appdetails-properties) on Steam store.
 
 ## Documentation
-Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.1/steam_webapi_rust_sdk/).
+Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.3/steam_webapi_rust_sdk/).
 
 
 ## Build
