@@ -19,7 +19,7 @@ pub mod isteam_apps;
 pub mod store_steampowered_com;
 
 #[cfg(test)]
-mod lib_test;
+mod tests;
 
 /// Retrieves details for the given app id from the local cache. It may return an error
 /// if requested resource is absent, malformed or not readable from local cache.

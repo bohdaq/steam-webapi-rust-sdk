@@ -93,8 +93,8 @@ fn test_get_cached_730() {
 
     assert_eq!(app.required_age, 0);
     assert_eq!(app.release_date.coming_soon, false);
-    assert_eq!(app.release_date.date, "Aug 21, 2012");
-    assert_eq!(app.recommendations.total, 3452092);
+    assert_eq!(app.release_date.date, "21 Aug, 2012");
+    assert_eq!(app.recommendations.total, 3458356);
     assert_eq!(app.platforms.windows, true);
     assert_eq!(app.platforms.mac, true);
     assert_eq!(app.platforms.linux, true);
@@ -116,7 +116,7 @@ fn test_get_cached_730() {
     assert_eq!(app.package_groups.get(0).unwrap().subs.len(), 2);
 
     assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().packageid, 54029);
-    assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().price_in_cents_with_discount, 1499);
+    assert_eq!(app.package_groups.get(0).unwrap().subs.get(1).unwrap().price_in_cents_with_discount, 45000);
 
     assert_eq!(app.movies.get(0).unwrap().thumbnail, "https://cdn.akamai.steamstatic.com/steam/apps/81958/movie.293x165.jpg?t=1554409259");
     assert_eq!(app.movies.get(0).unwrap().name, "CS:GO Trailer Long");
