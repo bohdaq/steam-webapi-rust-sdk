@@ -1,7 +1,7 @@
 pub mod get_app_list;
+pub mod get_match_history;
 
-#[cfg(test)]
-mod tests;
+
 
 pub fn get_interface() -> String {
     "ISteamApps".to_string()

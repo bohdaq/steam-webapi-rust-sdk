@@ -16,6 +16,9 @@ use std::io::Write;
 use std::path::Path;
 use crate::util::{get_cache_dir_path, get_json_filetype};
 
+#[cfg(test)]
+mod tests;
+
 
 /// Retrieves apps available on the Steam store.
 ///
@@ -195,9 +198,9 @@ pub fn parse_api_call_result(response_string: String) -> Result<Vec<SteamApp>, S
     let list : Vec<SteamApp> = serde_json::from_value(apps).unwrap();
 
     let filtered_list = list
-                            .into_iter()
-                            .filter(|steam_app| steam_app.name != "")
-                            .collect();
+        .into_iter()
+        .filter(|steam_app| steam_app.name != "")
+        .collect();
 
     Ok(filtered_list)
 }
