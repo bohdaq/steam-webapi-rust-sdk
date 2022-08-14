@@ -112,3 +112,46 @@ pub fn get_cached_app_list() -> Result<Vec<SteamApp>, String> {
     let boxed_result = isteam_apps::get_app_list::get_cached();
     boxed_result
 }
+
+/// Converts given 32 bit Steam account id to 64 bit
+///
+/// # Examples
+///
+/// ```
+/// use steam_webapi_rust_sdk::convert_32bit_account_id_to_64bit;
+///
+/// let _32bit_id = 95816;
+/// let converted = convert_32bit_account_id_to_64bit(_32bit_id);
+///
+/// let expected_id = 76561197960361544;
+/// assert_eq!(expected_id, converted);
+///
+/// ```
+pub fn convert_32bit_account_id_to_64bit(account_id_32bit: i64) -> i64 {
+    let valves_magic_constant = 76561197960265728;
+    let mut converted_to_64_bit = account_id_32bit;
+    converted_to_64_bit += valves_magic_constant;
+    converted_to_64_bit
+}
+
+
+/// Converts given 64 bit Steam account id to 32 bit
+///
+/// # Examples
+///
+/// ```
+/// use steam_webapi_rust_sdk::convert_64bit_account_id_to_32bit;
+///
+/// let _64bit_id = 76561197960361544;
+/// let converted = convert_64bit_account_id_to_32bit(_64bit_id);
+///
+/// let expected_id = 95816;
+/// assert_eq!(expected_id, converted);
+///
+/// ```
+pub fn convert_64bit_account_id_to_32bit(account_id_32bit: i64) -> i64 {
+    let valves_magic_constant = 76561197960265728;
+    let mut converted_to_32_bit = account_id_32bit;
+    converted_to_32_bit -= valves_magic_constant;
+    converted_to_32_bit
+}

@@ -94,7 +94,7 @@ fn test_get_cached_730() {
     assert_eq!(app.required_age, 0);
     assert_eq!(app.release_date.coming_soon, false);
     assert_eq!(app.release_date.date, "21 Aug, 2012");
-    assert_eq!(app.recommendations.total, 3458356);
+    assert_eq!(app.recommendations.total, 3458723);
     assert_eq!(app.platforms.windows, true);
     assert_eq!(app.platforms.mac, true);
     assert_eq!(app.platforms.linux, true);

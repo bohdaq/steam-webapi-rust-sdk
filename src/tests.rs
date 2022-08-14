@@ -1,4 +1,4 @@
-use crate::{get_app_details, get_app_list, get_cached_app_details, get_cached_app_list};
+use crate::{convert_32bit_account_id_to_64bit, convert_64bit_account_id_to_32bit, get_app_details, get_app_list, get_cached_app_details, get_cached_app_list};
 
 #[cfg(test)]
 
@@ -66,4 +66,35 @@ fn test_details_on_cached_resources() {
 
         };
     }
+}
+
+
+#[test]
+fn test_steam_32bit_to_64bit_id_conversion() {
+    let _32bit_id = 95816;
+
+    let converted = convert_32bit_account_id_to_64bit(_32bit_id);
+
+    let expected_id = 76561197960361544;
+    assert_eq!(expected_id, converted);
+}
+
+#[test]
+fn test_steam_64bit_to_32bit_id_conversion() {
+    let _64bit_id = 76561199148118849;
+
+    let converted = convert_64bit_account_id_to_32bit(_64bit_id);
+
+    let expected_id = 1187853121;
+    assert_eq!(expected_id, converted);
+}
+
+#[test]
+fn test_steam_64bit_to_32bit_id_conversion_v2() {
+    let _64bit_id = 76561197998367327;
+
+    let converted = convert_64bit_account_id_to_32bit(_64bit_id);
+
+    let expected_id = 38101599;
+    assert_eq!(expected_id, converted);
 }
