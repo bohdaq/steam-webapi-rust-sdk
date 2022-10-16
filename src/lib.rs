@@ -156,3 +156,12 @@ pub fn convert_64bit_account_id_to_32bit(account_id_32bit: i64) -> i64 {
     converted_to_32_bit -= valves_magic_constant;
     converted_to_32_bit
 }
+
+
+pub(crate) fn get_scheme() -> String {
+    "https".to_string()
+}
+
+pub(crate) fn get_host() -> String {
+    "api.steampowered.com".to_string()
+}

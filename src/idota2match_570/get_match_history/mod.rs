@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
-use crate::{convert_32bit_account_id_to_64bit, idota2match_570};
+use crate::{convert_32bit_account_id_to_64bit, get_host, get_scheme, idota2match_570};
 use crate::util::{get_cache_dir_path, get_steam_web_api_key};
 
 #[cfg(test)]
@@ -85,10 +85,10 @@ pub fn get_api_url(account_id: Option<i64>,
     }
 
     let url_builder = UrlComponents{
-        scheme: "https".to_string(),
+        scheme: get_scheme(),
         authority: Some(UrlAuthority{
             user_info: None,
-            host: "api.steampowered.com".to_string(),
+            host: get_host(),
             port: None
         }),
         path,
