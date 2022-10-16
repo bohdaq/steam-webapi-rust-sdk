@@ -18,3 +18,4 @@ license = "MIT OR Apache-2.0 OR ISC OR LGPL-3.0-or-later OR CC-BY-4.0"
 serde = { version="1.0.138", features=["derive"] }
 serde_json = { version="1.0.82" }
 minreq = { version = "2.6.0", features=["https"] }
+url-build-parse = "1.0.0"

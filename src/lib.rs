@@ -17,6 +17,7 @@ use crate::store_steampowered_com::appdetails::SteamAppDetails;
 pub mod util;
 pub mod isteam_apps;
 pub mod store_steampowered_com;
+pub mod idota2match_570;
 
 #[cfg(test)]
 mod tests;
