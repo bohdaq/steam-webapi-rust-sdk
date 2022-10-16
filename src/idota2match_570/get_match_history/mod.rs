@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use url_build_parse::{build_url, UrlAuthority, UrlComponents};
 use crate::{convert_32bit_account_id_to_64bit, idota2match_570};
 use crate::util::get_cache_dir_path;
 
@@ -31,6 +32,7 @@ pub fn get_version() -> String {
     "v1".to_string()
 }
 
+// curl https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1\?match_id\=664465007\&key\=1F2709FC907F0DEE1D1EB4787E06B695
 
 
 pub fn get_api_url(account_id: Option<i64>,
@@ -40,11 +42,13 @@ pub fn get_api_url(account_id: Option<i64>,
                              start_at_match_id: Option<u64>,
                              matches_requested: Option<u32>,
                              tournament_games_only: Option<bool>) -> String {
+
+
     let  interface = idota2match_570::get_interface();
     let  method = get_method_name();
     let  version = get_version();
 
-    let mut resource = [interface, "-".to_string(), method, "-".to_string(), version].join("");
+    let path = [interface, "/".to_string(), method, "/".to_string(), version].join("");
     let mut params_map = HashMap::new();
 
     if account_id.is_some() {
@@ -76,9 +80,20 @@ pub fn get_api_url(account_id: Option<i64>,
         params_map.insert("tournament_games_only".to_string(), tournament_games_only.unwrap().to_string());
     }
 
-    let filepath = [get_cache_dir_path(), "/".to_string(), resource].join("");
+    let url_builder = UrlComponents{
+        scheme: "https".to_string(),
+        authority: Some(UrlAuthority{
+            user_info: None,
+            host: "api.steampowered.com".to_string(),
+            port: None
+        }),
+        path,
+        query: Some(params_map),
+        fragment: None
+    };
 
-    filepath
+    let url = build_url(url_builder).unwrap();
+    url
 }
 
 pub struct GameMode {
