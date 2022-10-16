@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
 use crate::{convert_32bit_account_id_to_64bit, idota2match_570};
-use crate::util::get_cache_dir_path;
+use crate::util::{get_cache_dir_path, get_steam_web_api_key};
 
 #[cfg(test)]
 mod tests;
@@ -78,6 +78,10 @@ pub fn get_api_url(account_id: Option<i64>,
 
     if tournament_games_only.is_some() {
         params_map.insert("tournament_games_only".to_string(), tournament_games_only.unwrap().to_string());
+    }
+
+    if tournament_games_only.is_some() {
+        params_map.insert("key".to_string(), get_steam_web_api_key());
     }
 
     let url_builder = UrlComponents{
