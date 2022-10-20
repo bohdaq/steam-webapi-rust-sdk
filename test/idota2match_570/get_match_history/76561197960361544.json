@@ -1,0 +1,90 @@
+{
+  "result": {
+    "status": 1,
+    "num_results": 1,
+    "total_results": 500,
+    "results_remaining": 499,
+    "matches": [
+      {
+        "match_id": 5066503471,
+        "match_seq_num": 4250346899,
+        "start_time": 1570905295,
+        "lobby_type": 0,
+        "radiant_team_id": 0,
+        "dire_team_id": 0,
+        "players": [
+          {
+            "account_id": 178918873,
+            "player_slot": 0,
+            "team_number": 0,
+            "team_slot": 0,
+            "hero_id": 97
+          },
+          {
+            "account_id": 4294967295,
+            "player_slot": 1,
+            "team_number": 0,
+            "team_slot": 1,
+            "hero_id": 106
+          },
+          {
+            "account_id": 184106424,
+            "player_slot": 2,
+            "team_number": 0,
+            "team_slot": 2,
+            "hero_id": 27
+          },
+          {
+            "account_id": 4294967295,
+            "player_slot": 3,
+            "team_number": 0,
+            "team_slot": 3,
+            "hero_id": 74
+          },
+          {
+            "account_id": 93497086,
+            "player_slot": 4,
+            "team_number": 0,
+            "team_slot": 4,
+            "hero_id": 19
+          },
+          {
+            "account_id": 75611603,
+            "player_slot": 128,
+            "team_number": 1,
+            "team_slot": 0,
+            "hero_id": 14
+          },
+          {
+            "account_id": 95816,
+            "player_slot": 129,
+            "team_number": 1,
+            "team_slot": 1,
+            "hero_id": 8
+          },
+          {
+            "account_id": 4294967295,
+            "player_slot": 130,
+            "team_number": 1,
+            "team_slot": 2,
+            "hero_id": 101
+          },
+          {
+            "account_id": 32748914,
+            "player_slot": 131,
+            "team_number": 1,
+            "team_slot": 3,
+            "hero_id": 119
+          },
+          {
+            "account_id": 4294967295,
+            "player_slot": 132,
+            "team_number": 1,
+            "team_slot": 4,
+            "hero_id": 59
+          }
+        ]
+      }
+    ]
+  }
+}
