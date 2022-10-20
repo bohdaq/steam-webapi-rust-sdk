@@ -165,3 +165,25 @@ pub(crate) fn get_scheme() -> String {
 pub(crate) fn get_host() -> String {
     "api.steampowered.com".to_string()
 }
+
+pub(crate) fn make_api_call(url: String) -> Result<String, String> {
+
+    let boxed_response = minreq::get(url).send();
+    if boxed_response.is_err() {
+        return Err("Operation timed out (API call)".to_string());
+    }
+
+    let raw_response : Vec<u8> = boxed_response.unwrap().into_bytes();
+
+    let response_string_boxed = String::from_utf8(raw_response);
+    if response_string_boxed.is_err() {
+        let error_message = response_string_boxed.err().unwrap().to_string();
+        if error_message == "invalid utf-8 sequence of 1 bytes from index 1" {
+            return Err("no response from API".to_string());
+        }
+        return Err("invalid utf-8 sequence".to_string());
+    }
+    let response_string: String = response_string_boxed.unwrap();
+
+    Ok(response_string)
+}
