@@ -1,6 +1,7 @@
 use url_build_parse::parse_url;
 use crate::{get_host, get_scheme};
 use crate::idota2match_570::get_match_history::{GAME_MODE, get_api_url, PLAYER_SKILL};
+use crate::util::get_steam_web_api_key;
 
 #[test]
 fn modes() {
@@ -42,9 +43,33 @@ fn api_url_no_options() {
         None
     );
 
-    assert_eq!("https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?", api_url.as_str());
     let components = parse_url(api_url.as_str()).unwrap();
 
     assert_eq!(get_scheme(), components.scheme);
     assert_eq!(get_host(), components.authority.unwrap().host);
+    assert_eq!("/IDOTA2Match_570/GetMatchHistory/v1", components.path);
+
+    let params = components.query.unwrap();
+    let boxed_account_id = params.get("account_id");
+    assert_eq!(None, boxed_account_id);
+
+    let boxed_game_mode = params.get("game_mode");
+    assert_eq!(None, boxed_game_mode);
+
+    let boxed_skill = params.get("skill");
+    assert_eq!(None, boxed_skill);
+
+    let boxed_min_players = params.get("min_players");
+    assert_eq!(None, boxed_min_players);
+
+    let boxed_start_at_match_id = params.get("start_at_match_id");
+    assert_eq!(None, boxed_start_at_match_id);
+
+    let boxed_matches_requested = params.get("matches_requested");
+    assert_eq!(None, boxed_matches_requested);
+
+    let boxed_key = params.get("key");
+    assert_eq!(get_steam_web_api_key(), boxed_key.unwrap().to_string());
+
+
 }
