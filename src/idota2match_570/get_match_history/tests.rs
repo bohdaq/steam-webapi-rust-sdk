@@ -73,3 +73,47 @@ fn api_url_no_options() {
 
 
 }
+
+
+#[test]
+fn api_url_options() {
+    let api_url = get_api_url(
+        Some(76561197960361544),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None
+    );
+
+    let components = parse_url(api_url.as_str()).unwrap();
+
+    assert_eq!(get_scheme(), components.scheme);
+    assert_eq!(get_host(), components.authority.unwrap().host);
+    assert_eq!("/IDOTA2Match_570/GetMatchHistory/v1", components.path);
+
+    let params = components.query.unwrap();
+    let boxed_account_id = params.get("account_id");
+    assert_eq!(76561197960361544, boxed_account_id.unwrap().parse::<u64>().unwrap());
+
+    let boxed_game_mode = params.get("game_mode");
+    assert_eq!(None, boxed_game_mode);
+
+    let boxed_skill = params.get("skill");
+    assert_eq!(None, boxed_skill);
+
+    let boxed_min_players = params.get("min_players");
+    assert_eq!(None, boxed_min_players);
+
+    let boxed_start_at_match_id = params.get("start_at_match_id");
+    assert_eq!(None, boxed_start_at_match_id);
+
+    let boxed_matches_requested = params.get("matches_requested");
+    assert_eq!(None, boxed_matches_requested);
+
+    let boxed_key = params.get("key");
+    assert_eq!(get_steam_web_api_key(), boxed_key.unwrap().to_string());
+
+
+}

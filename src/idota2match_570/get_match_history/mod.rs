@@ -55,8 +55,7 @@ pub fn get_api_url(account_id: Option<i64>,
     let mut params_map = HashMap::new();
 
     if account_id.is_some() {
-        let account_id_64 = convert_32bit_account_id_to_64bit(account_id.unwrap());
-        params_map.insert("account_id".to_string(), account_id_64.to_string());
+        params_map.insert("account_id".to_string(), account_id.unwrap().to_string());
     }
 
     if game_mode.is_some() {
