@@ -103,6 +103,25 @@ pub fn get_api_url(account_id: Option<i64>,
     url
 }
 
+const GAME_MODE: GameMode = GameMode{
+    none: 0,
+    all_pick: 1,
+    captains_mode: 2,
+    random_draft: 3,
+    single_draft: 4,
+    all_random: 5,
+    intro: 6,
+    diretide: 7,
+    reverse_captains_mode: 8,
+    the_greeviling: 9,
+    tutorial: 10,
+    mid_only: 11,
+    least_played: 12,
+    new_player_pool: 13,
+    compendium_matchmaking: 14,
+    captains_draft: 16
+};
+
 pub struct GameMode {
     none: u8,
     all_pick: u8,
