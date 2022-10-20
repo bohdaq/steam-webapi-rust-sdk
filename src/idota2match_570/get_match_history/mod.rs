@@ -103,7 +103,7 @@ pub fn get_api_url(account_id: Option<i64>,
     url
 }
 
-const GAME_MODE: GameMode = GameMode{
+pub const GAME_MODE: GameMode = GameMode{
     none: 0,
     all_pick: 1,
     captains_mode: 2,
@@ -141,24 +141,7 @@ pub struct GameMode {
     captains_draft: u8,
 }
 
-pub const game_modes: GameMode = GameMode {
-    none: 0,
-    all_pick: 1,
-    captains_mode: 2,
-    random_draft: 3,
-    single_draft: 4,
-    all_random: 5,
-    intro: 6,
-    diretide: 7,
-    reverse_captains_mode: 8,
-    the_greeviling: 9,
-    tutorial: 10,
-    mid_only: 11,
-    least_played: 12,
-    new_player_pool: 13,
-    compendium_matchmaking: 14,
-    captains_draft: 16
-};
+
 
 pub struct Skill {
     any: u8,
@@ -167,7 +150,7 @@ pub struct Skill {
     very_high: u8,
 }
 
-pub const player_skill : Skill = Skill {
+pub const PLAYER_SKILL : Skill = Skill {
     any: 0,
     normal: 1,
     high: 2,

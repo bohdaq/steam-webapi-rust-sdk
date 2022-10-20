@@ -1,4 +1,4 @@
-use crate::idota2match_570::get_match_history::GAME_MODE;
+use crate::idota2match_570::get_match_history::{GAME_MODE, PLAYER_SKILL};
 
 #[test]
 fn modes() {
@@ -18,4 +18,12 @@ fn modes() {
     assert_eq!(13, GAME_MODE.new_player_pool);
     assert_eq!(14, GAME_MODE.compendium_matchmaking);
     assert_eq!(16, GAME_MODE.captains_draft);
+}
+
+#[test]
+fn skill() {
+    assert_eq!(0, PLAYER_SKILL.any);
+    assert_eq!(1, PLAYER_SKILL.normal);
+    assert_eq!(2, PLAYER_SKILL.high);
+    assert_eq!(3, PLAYER_SKILL.very_high);
 }
