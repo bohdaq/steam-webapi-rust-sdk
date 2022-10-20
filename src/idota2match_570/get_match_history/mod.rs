@@ -6,6 +6,24 @@ use crate::util::{get_steam_web_api_key};
 #[cfg(test)]
 mod tests;
 
+pub struct Participant {
+    pub account_id: i64,
+    pub player_slot: i64,
+    pub team_number: i64,
+    pub team_slot: i64,
+    pub hero_id: i64,
+}
+
+pub struct MatchHistory {
+    pub match_id: i64,
+    pub match_seq_num: i64,
+    pub start_time: i64,
+    pub lobby_type: i64,
+    pub radiant_team_id: i64,
+    pub dire_team_ide: i64,
+    pub players: Vec<Participant>
+}
+
 /// Returns method name invoked on Steam API.
 ///
 /// # Examples
@@ -98,6 +116,12 @@ pub fn get_api_url(account_id: Option<i64>,
 
     let url = build_url(url_builder).unwrap();
     url
+}
+
+pub fn parse_response(response: String) -> Vec<MatchHistory> {
+    let history = vec![];
+
+    history
 }
 
 pub const GAME_MODE: GameMode = GameMode{
