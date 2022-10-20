@@ -79,7 +79,7 @@ fn api_url_no_options() {
 fn api_url_options() {
     let api_url = get_api_url(
         Some(76561197960361544),
-        None,
+        Some(GAME_MODE.all_pick),
         None,
         None,
         None,
@@ -98,7 +98,7 @@ fn api_url_options() {
     assert_eq!(76561197960361544, boxed_account_id.unwrap().parse::<u64>().unwrap());
 
     let boxed_game_mode = params.get("game_mode");
-    assert_eq!(None, boxed_game_mode);
+    assert_eq!(GAME_MODE.all_pick, boxed_game_mode.unwrap().parse::<u8>().unwrap());
 
     let boxed_skill = params.get("skill");
     assert_eq!(None, boxed_skill);
