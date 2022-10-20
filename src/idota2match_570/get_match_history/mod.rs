@@ -51,7 +51,7 @@ pub fn get_api_url(account_id: Option<i64>,
     let  method = get_method_name();
     let  version = get_version();
 
-    let path = [interface, "/".to_string(), method, "/".to_string(), version].join("");
+    let path = ["/".to_string(), interface, "/".to_string(), method, "/".to_string(), version].join("");
     let mut params_map = HashMap::new();
 
     if account_id.is_some() {
@@ -91,7 +91,7 @@ pub fn get_api_url(account_id: Option<i64>,
         scheme: get_scheme(),
         authority: Some(UrlAuthority{
             user_info: None,
-            host: get_host(),
+            host: "api.steampowered.com".to_string(),
             port: None
         }),
         path,

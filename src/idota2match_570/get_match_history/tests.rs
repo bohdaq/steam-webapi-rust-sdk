@@ -1,4 +1,6 @@
-use crate::idota2match_570::get_match_history::{GAME_MODE, PLAYER_SKILL};
+use url_build_parse::parse_url;
+use crate::{get_host, get_scheme};
+use crate::idota2match_570::get_match_history::{GAME_MODE, get_api_url, PLAYER_SKILL};
 
 #[test]
 fn modes() {
@@ -26,4 +28,23 @@ fn skill() {
     assert_eq!(1, PLAYER_SKILL.normal);
     assert_eq!(2, PLAYER_SKILL.high);
     assert_eq!(3, PLAYER_SKILL.very_high);
+}
+
+#[test]
+fn api_url_no_options() {
+    let api_url = get_api_url(
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None
+    );
+
+    assert_eq!("https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?", api_url.as_str());
+    let components = parse_url(api_url.as_str()).unwrap();
+
+    assert_eq!(get_scheme(), components.scheme);
+    assert_eq!(get_host(), components.authority.unwrap().host);
 }

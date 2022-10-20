@@ -163,7 +163,8 @@ pub(crate) fn get_scheme() -> String {
 }
 
 pub(crate) fn get_host() -> String {
-    "api.steampowered.com".to_string()
+    let host = "api.steampowered.com".to_string();
+    host
 }
 
 pub(crate) fn make_api_call(url: String) -> Result<String, String> {
