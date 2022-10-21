@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use serde::Serialize;
+use serde::Deserialize;
 use serde_json::Value;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
 use crate::{convert_32bit_account_id_to_64bit, get_host, get_scheme, idota2match_570};
@@ -7,6 +9,9 @@ use crate::util::{get_steam_web_api_key};
 #[cfg(test)]
 mod tests;
 
+// curl https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1\?match_id\=664465007\&key\=1F2709FC907F0DEE1D1EB4787E06B695
+
+#[derive(Serialize, Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct ResponseMatchHistory {
     pub status: i64,
     pub num_results: i64,
@@ -15,6 +20,7 @@ pub struct ResponseMatchHistory {
     pub matches: Vec<MatchHistory>,
 }
 
+#[derive(Serialize, Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct Participant {
     pub account_id: i64,
     pub player_slot: i64,
@@ -23,6 +29,7 @@ pub struct Participant {
     pub hero_id: i64,
 }
 
+#[derive(Serialize, Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct MatchHistory {
     pub match_id: i64,
     pub match_seq_num: i64,
@@ -33,37 +40,13 @@ pub struct MatchHistory {
     pub players: Vec<Participant>,
 }
 
-/// Returns method name invoked on Steam API.
-///
-/// # Examples
-///
-/// ```
-/// let method_name = steam_webapi_rust_sdk::isteam_apps::get_match_history::get_method_name();
-///
-/// assert!(method_name == "GetMatchHistory".to_string());
-/// ```
 pub fn get_method_name() -> String {
     "GetMatchHistory".to_string()
 }
 
-/// Returns version of the method invoked on Steam API.
-///
-/// # Examples
-///
-/// ```
-/// let version = steam_webapi_rust_sdk::isteam_apps::get_match_history::get_version();
-///
-/// assert!(version == "v1".to_string());
-/// ```
 pub fn get_version() -> String {
     "v1".to_string()
 }
-
-// curl https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1\?match_id\=664465007\&key\=1F2709FC907F0DEE1D1EB4787E06B695
-
-
-
-
 
 pub fn get_api_url(account_id: Option<i64>,
                              game_mode: Option<u8>,
@@ -78,7 +61,13 @@ pub fn get_api_url(account_id: Option<i64>,
     let  method = get_method_name();
     let  version = get_version();
 
-    let path = ["/".to_string(), interface, "/".to_string(), method, "/".to_string(), version].join("");
+    let path = [
+        "/".to_string(),
+        interface, "/".to_string(),
+        method, "/".to_string(),
+        version
+    ].join("");
+
     let mut params_map = HashMap::new();
 
     if account_id.is_some() {
@@ -247,8 +236,6 @@ pub struct GameMode {
     compendium_matchmaking: u8,
     captains_draft: u8,
 }
-
-
 
 pub struct Skill {
     any: u8,
