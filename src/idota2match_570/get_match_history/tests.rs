@@ -1,7 +1,7 @@
 use std::fs::read_to_string;
 use url_build_parse::parse_url;
 use crate::{get_host, get_scheme};
-use crate::idota2match_570::get_match_history::{GAME_MODE, get_api_url, PLAYER_SKILL};
+use crate::idota2match_570::get_match_history::{GAME_MODE, get_api_url, parse_response, PLAYER_SKILL};
 use crate::store_steampowered_com::appdetails::parse_api_call_result;
 use crate::util::get_steam_web_api_key;
 
@@ -122,8 +122,13 @@ fn api_url_options() {
 
 #[test]
 fn parse(){
-    let filepath = "test/idota2match_570/76561197960361544.json";
+    let filepath = "test/idota2match_570/get_match_history/76561197960361544.json";
     let boxed_read = read_to_string(filepath);
 
     let response = boxed_read.unwrap();
+
+    let boxed_parse = parse_response(response);
+    assert!(boxed_parse.is_ok());
+
+    let response_match_history = boxed_parse.unwrap();
 }

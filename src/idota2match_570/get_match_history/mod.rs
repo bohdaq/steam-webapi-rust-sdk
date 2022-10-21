@@ -7,6 +7,14 @@ use crate::util::{get_steam_web_api_key};
 #[cfg(test)]
 mod tests;
 
+pub struct ResponseMatchHistory {
+    pub status: i64,
+    pub num_results: i64,
+    pub total_results: i64,
+    pub results_remaining: i64,
+    pub matches: Vec<MatchHistory>,
+}
+
 pub struct Participant {
     pub account_id: i64,
     pub player_slot: i64,
@@ -21,8 +29,8 @@ pub struct MatchHistory {
     pub start_time: i64,
     pub lobby_type: i64,
     pub radiant_team_id: i64,
-    pub dire_team_ide: i64,
-    pub players: Vec<Participant>
+    pub dire_team_id: i64,
+    pub players: Vec<Participant>,
 }
 
 /// Returns method name invoked on Steam API.
@@ -119,8 +127,7 @@ pub fn get_api_url(account_id: Option<i64>,
     url
 }
 
-pub fn parse_response(response: String) -> Result<Vec<MatchHistory>, String> {
-    let history = vec![];
+pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> {
 
     let boxed_initial_parse = serde_json::from_str(&response);
     if boxed_initial_parse.is_err() {
@@ -128,10 +135,79 @@ pub fn parse_response(response: String) -> Result<Vec<MatchHistory>, String> {
     }
     let mut json: Value = boxed_initial_parse.unwrap();
 
-    
+    let mut result = json["result".to_string()].take();
+    let status = result["status".to_string()].take().as_i64().unwrap();
+    let num_results = result["num_results".to_string()].take().as_i64().unwrap();
+    let total_results = result["total_results".to_string()].take().as_i64().unwrap();
+    let results_remaining = result["results_remaining".to_string()].take().as_i64().unwrap();
+    let matches = result["matches"].take();
+    let matches = matches.as_array().unwrap();
+
+    let mut match_history_result = ResponseMatchHistory {
+        status,
+        num_results,
+        total_results,
+        results_remaining,
+        matches: vec![]
+    };
+
+    for match_result in matches {
+        let match_id_clone = match_result["match_id"].clone();
+        let match_id = match_id_clone.as_i64().unwrap();
+        let match_seq_num_clone = match_result["match_seq_num"].clone();
+        let match_seq_num = match_seq_num_clone.as_i64().unwrap();
+        let start_time_clone = match_result["start_time"].clone();
+        let start_time = start_time_clone.as_i64().unwrap();
+        let lobby_type_clone = match_result["lobby_type"].clone();
+        let lobby_type = lobby_type_clone.as_i64().unwrap();
+        let radiant_team_id_clone = match_result["radiant_team_id"].clone();
+        let radiant_team_id = radiant_team_id_clone.as_i64().unwrap();
+        let dire_team_id_clone = match_result["dire_team_id"].clone();
+        let dire_team_id = dire_team_id_clone.as_i64().unwrap();
+        let players_clone = match_result["players"].clone();
+        let players = players_clone.as_array().unwrap();
 
 
-    Ok(history)
+        let mut match_history = MatchHistory{
+            match_id,
+            match_seq_num,
+            start_time,
+            lobby_type,
+            radiant_team_id,
+            dire_team_id,
+            players: vec![]
+        };
+
+
+        for player_result in players {
+            let account_id_clone = player_result["account_id"].clone();
+            let account_id = account_id_clone.as_i64().unwrap();
+            let player_slot_clone = player_result["player_slot"].clone();
+            let player_slot = player_slot_clone.as_i64().unwrap();
+            let team_number_clone = player_result["team_number"].clone();
+            let team_number = team_number_clone.as_i64().unwrap();
+            let team_slot_clone = player_result["team_slot"].clone();
+            let team_slot = team_slot_clone.as_i64().unwrap();
+            let hero_id_clone = player_result["hero_id"].clone();
+            let hero_id = hero_id_clone.as_i64().unwrap();
+
+            let player = Participant{
+                account_id,
+                player_slot,
+                team_number,
+                team_slot,
+                hero_id
+            };
+
+            match_history.players.push(player);
+        }
+
+        match_history_result.matches.push(match_history)
+    }
+
+
+
+    Ok(match_history_result)
 }
 
 pub const GAME_MODE: GameMode = GameMode{
