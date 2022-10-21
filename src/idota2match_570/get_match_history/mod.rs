@@ -283,4 +283,28 @@ pub const PLAYER_SKILL : Skill = Skill {
     very_high: 3
 };
 
+pub struct LobbyType {
+    invalid: u8,
+    public_matchmaking: u8,
+    practise: u8,
+    tournament: u8,
+    tutorial: u8,
+    co_op_with_bots: u8,
+    team_match: u8,
+    solo_queue: u8,
+    ranked_matchmaking: u8,
+    one_vs_one_solo_mid: u8,
+}
 
+pub const LOBBY_TYPE: LobbyType = LobbyType {
+    invalid: -1,
+    public_matchmaking: 0,
+    practise: 1,
+    tournament: 2,
+    tutorial: 3,
+    co_op_with_bots: 4,
+    team_match: 5,
+    solo_queue: 6,
+    ranked_matchmaking: 7,
+    one_vs_one_solo_mid: 8
+};
