@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use serde_json::Value;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
 use crate::{convert_32bit_account_id_to_64bit, get_host, get_scheme, idota2match_570};
 use crate::util::{get_steam_web_api_key};
@@ -118,10 +119,19 @@ pub fn get_api_url(account_id: Option<i64>,
     url
 }
 
-pub fn parse_response(response: String) -> Vec<MatchHistory> {
+pub fn parse_response(response: String) -> Result<Vec<MatchHistory>, String> {
     let history = vec![];
 
-    history
+    let boxed_initial_parse = serde_json::from_str(&response);
+    if boxed_initial_parse.is_err() {
+        return Err(boxed_initial_parse.err().unwrap().to_string());
+    }
+    let mut json: Value = boxed_initial_parse.unwrap();
+
+    
+
+
+    Ok(history)
 }
 
 pub const GAME_MODE: GameMode = GameMode{
