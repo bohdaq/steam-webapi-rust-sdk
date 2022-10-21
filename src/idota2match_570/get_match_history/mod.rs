@@ -22,7 +22,7 @@ pub struct ResponseMatchHistory {
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct Participant {
-    pub account_id: i64,
+    pub account_id: i64, //steam returns 32bit version
     pub player_slot: i64,
     pub team_number: i64,
     pub team_slot: i64,
