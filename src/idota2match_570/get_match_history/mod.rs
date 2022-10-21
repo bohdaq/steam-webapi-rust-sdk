@@ -148,6 +148,8 @@ pub fn get_api_url(account_id: Option<i64>,
     url
 }
 
+const MATCH_HISTORY_IS_NOT_ALLOWED_BY_USER_PREFERENCES: u8 = 15;
+
 pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> {
 
     let boxed_initial_parse = serde_json::from_str(&response);
@@ -158,6 +160,9 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
 
     let mut result = json["result".to_string()].take();
     let status = result["status".to_string()].take().as_i64().unwrap();
+    if status == MATCH_HISTORY_IS_NOT_ALLOWED_BY_USER_PREFERENCES {
+        return Err("Cannot get match history for a user that hasn't allowed it".to_string())
+    }
     let num_results = result["num_results".to_string()].take().as_i64().unwrap();
     let total_results = result["total_results".to_string()].take().as_i64().unwrap();
     let results_remaining = result["results_remaining".to_string()].take().as_i64().unwrap();
