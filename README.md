@@ -6,9 +6,6 @@ In order to use this library make sure to set STEAM_WEB_API_KEY system environme
 The library itself tries to minimize number of networks calls through the caching relevant 
 responses to the 'steam-webapi-cache' folder.
 
-There is already prebuilt cache for all steam apps, in order to use it, 
-simply clone [steam-webapi-cache](https://github.com/bohdaq/steam-webapi-cache) 
-into the root folder of your project.
 
 ## Features
 1. Ability to get list of apps available on the Steam.
@@ -33,7 +30,7 @@ available on Steam store.
 App to [list all properties in app details response API](https://github.com/bohdaq/list-steam-appdetails-properties) on Steam store.
 
 ## Documentation
-Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.3/steam_webapi_rust_sdk/).
+Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.4/steam_webapi_rust_sdk/).
 
 
 ## Build
