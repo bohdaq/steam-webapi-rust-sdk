@@ -183,4 +183,18 @@ fn parse(){
     assert_eq!(0, player_5.team_number);
     assert_eq!(4, player_5.team_slot);
     assert_eq!(19, player_5.hero_id);
+
+    let player_6 = match_1.players.get(5).unwrap();
+    assert_eq!(75611603, player_6.account_id);
+    assert_eq!(128, player_6.player_slot);
+    assert_eq!(1, player_6.team_number);
+    assert_eq!(0, player_6.team_slot);
+    assert_eq!(14, player_6.hero_id);
+
+    let player_7 = match_1.players.get(6).unwrap();
+    assert_eq!(95816, player_7.account_id);
+    assert_eq!(129, player_7.player_slot);
+    assert_eq!(1, player_7.team_number);
+    assert_eq!(1, player_7.team_slot);
+    assert_eq!(8, player_7.hero_id);
 }
