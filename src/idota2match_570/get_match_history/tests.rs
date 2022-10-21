@@ -197,4 +197,25 @@ fn parse(){
     assert_eq!(1, player_7.team_number);
     assert_eq!(1, player_7.team_slot);
     assert_eq!(8, player_7.hero_id);
+
+    let player_8 = match_1.players.get(7).unwrap();
+    assert_eq!(4294967295, player_8.account_id);
+    assert_eq!(130, player_8.player_slot);
+    assert_eq!(1, player_8.team_number);
+    assert_eq!(2, player_8.team_slot);
+    assert_eq!(101, player_8.hero_id);
+
+    let player_9 = match_1.players.get(8).unwrap();
+    assert_eq!(32748914, player_9.account_id);
+    assert_eq!(131, player_9.player_slot);
+    assert_eq!(1, player_9.team_number);
+    assert_eq!(3, player_9.team_slot);
+    assert_eq!(119, player_9.hero_id);
+
+    let player_10 = match_1.players.get(9).unwrap();
+    assert_eq!(4294967295, player_10.account_id);
+    assert_eq!(132, player_10.player_slot);
+    assert_eq!(1, player_10.team_number);
+    assert_eq!(4, player_10.team_slot);
+    assert_eq!(59, player_10.hero_id);
 }
