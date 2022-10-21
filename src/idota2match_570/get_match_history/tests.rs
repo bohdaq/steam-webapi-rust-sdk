@@ -131,4 +131,19 @@ fn parse(){
     assert!(boxed_parse.is_ok());
 
     let response_match_history = boxed_parse.unwrap();
+    assert_eq!(1, response_match_history.status);
+    assert_eq!(1, response_match_history.num_results);
+    assert_eq!(500, response_match_history.total_results);
+    assert_eq!(499, response_match_history.results_remaining);
+    assert_eq!(1, response_match_history.matches.len());
+
+    let matches = response_match_history.matches;
+    let match_1 = matches.get(0).unwrap();
+
+    assert_eq!(5066503471, match_1.match_id);
+    assert_eq!(4250346899, match_1.match_seq_num);
+    assert_eq!(1570905295, match_1.start_time);
+    assert_eq!(0, match_1.lobby_type);
+    assert_eq!(0, match_1.radiant_team_id);
+    assert_eq!(0, match_1.dire_team_id);
 }
