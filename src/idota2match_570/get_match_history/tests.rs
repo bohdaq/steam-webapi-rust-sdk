@@ -146,4 +146,6 @@ fn parse(){
     assert_eq!(0, match_1.lobby_type);
     assert_eq!(0, match_1.radiant_team_id);
     assert_eq!(0, match_1.dire_team_id);
+
+    assert_eq!(10, match_1.players.len());
 }
