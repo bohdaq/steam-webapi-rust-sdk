@@ -1,4 +1,4 @@
-cff-version: 0.0.1
+cff-version: 0.0.4
 message: "If you use this software, please cite it as below."
 authors:
   - family-names: Tsap
@@ -6,7 +6,7 @@ authors:
     orcid: https://orcid.org/0000-0002-5221-5607
     email: bohdan.tsap@tutanota.com
 title: "steam-webapi-rust-sdk"
-version: 0.0.1
-doi: 10.5281/zenodo.6951936
-date-released: 2022-04-01
-url: "https://github.com/bohdaq/rust-web-server/"
+version: 0.0.4
+doi: 10.5281/zenodo.7236061
+date-released: 2022-10-21
+url: "https://github.com/bohdaq/steam-webapi-rust-sdk"
