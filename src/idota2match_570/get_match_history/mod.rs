@@ -3,7 +3,7 @@ use serde::Serialize;
 use serde::Deserialize;
 use serde_json::Value;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
-use crate::{convert_32bit_account_id_to_64bit, get_host, get_scheme, idota2match_570};
+use crate::{convert_32bit_account_id_to_64bit, get_host, get_scheme, idota2match_570, make_api_call};
 use crate::util::{get_steam_web_api_key};
 
 #[cfg(test)]
@@ -46,6 +46,38 @@ pub fn get_method_name() -> String {
 
 pub fn get_version() -> String {
     "v1".to_string()
+}
+
+pub fn get(account_id: Option<i64>,
+           game_mode: Option<u8>,
+           skill: Option<u8>,
+           min_players: Option<u32>,
+           start_at_match_id: Option<u64>,
+           matches_requested: Option<u32>,
+           tournament_games_only: Option<bool>)
+    -> Result<ResponseMatchHistory, String> {
+    let api_url = get_api_url(
+                            account_id,
+                            game_mode,
+                            skill,
+                            min_players,
+                            start_at_match_id,
+                            matches_requested,
+                            tournament_games_only
+    );
+    let boxed_response = make_api_call(api_url);
+    if boxed_response.is_err() {
+        return Err(boxed_response.err().unwrap());
+    }
+
+    let response = boxed_response.unwrap();
+    let boxed_result = parse_response(response);
+    if boxed_result.is_err() {
+        return Err(boxed_result.err().unwrap());
+    }
+
+    let result = boxed_result.unwrap();
+    Ok(result)
 }
 
 pub fn get_api_url(account_id: Option<i64>,

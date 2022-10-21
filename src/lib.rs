@@ -114,6 +114,48 @@ pub fn get_cached_app_list() -> Result<Vec<SteamApp>, String> {
     boxed_result
 }
 
+/// Retrieves list of matches from Dota2
+///
+/// # Examples
+///
+/// ```
+/// let boxed_dota2_match_list = steam_webapi_rust_sdk::get_dota2_match_history(
+///     Some(76561197960361544),
+///     None,
+///     None,
+///     None,
+///     None,
+///     None,
+///     None
+/// );
+///
+/// assert!(boxed_dota2_match_list.is_ok());
+/// if boxed_dota2_match_list.is_ok() {
+///     let dota2_match_list = boxed_dota2_match_list.unwrap();
+///     assert!(dota2_match_list.matches.len()>0);
+/// }
+///
+/// ```
+pub fn get_dota2_match_history(account_id: Option<i64>,
+                               game_mode: Option<u8>,
+                               skill: Option<u8>,
+                               min_players: Option<u32>,
+                               start_at_match_id: Option<u64>,
+                               matches_requested: Option<u32>,
+                               tournament_games_only: Option<bool>)
+    -> Result<ResponseMatchHistory, String> {
+    idota2match_570::get_dota2_match_history(
+        account_id,
+        game_mode,
+        skill,
+        min_players,
+        start_at_match_id,
+        matches_requested,
+        tournament_games_only
+    )
+
+}
+
 /// Converts given 32 bit Steam account id to 64 bit
 ///
 /// # Examples
