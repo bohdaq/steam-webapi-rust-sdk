@@ -11,6 +11,7 @@
 //! simply clone [steam-webapi-cache](https://github.com/bohdaq/steam-webapi-cache)
 //! into the root folder of your project.
 
+use crate::idota2match_570::get_match_history::ResponseMatchHistory;
 use crate::isteam_apps::get_app_list::SteamApp;
 use crate::store_steampowered_com::appdetails::SteamAppDetails;
 

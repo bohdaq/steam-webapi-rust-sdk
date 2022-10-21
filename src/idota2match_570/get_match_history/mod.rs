@@ -25,7 +25,7 @@ pub struct Participant {
     pub account_id: i64, //steam returns 32bit version
     pub player_slot: i64,
     pub team_number: i64,
-    pub team_slot: i64,
+    pub team_slot: u8,
     pub hero_id: i64,
 }
 
@@ -208,9 +208,11 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
             let team_number_clone = player_result["team_number"].clone();
             let team_number = team_number_clone.as_i64().unwrap();
             let team_slot_clone = player_result["team_slot"].clone();
-            let team_slot = team_slot_clone.as_i64().unwrap();
+            let team_slot_i64 = team_slot_clone.as_i64().unwrap();
             let hero_id_clone = player_result["hero_id"].clone();
             let hero_id = hero_id_clone.as_i64().unwrap();
+
+            let team_slot : u8 = team_slot_i64 as u8;
 
             let player = Participant{
                 account_id,
@@ -284,7 +286,7 @@ pub const PLAYER_SKILL : Skill = Skill {
 };
 
 pub struct LobbyType {
-    invalid: u8,
+    invalid: i8,
     public_matchmaking: u8,
     practise: u8,
     tournament: u8,
