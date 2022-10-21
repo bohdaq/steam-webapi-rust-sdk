@@ -25,15 +25,6 @@ In order to use this library make sure to set STEAM_WEB_API_KEY system environme
 
 > $ source  ~/.bash_profile
 
-## Cache
-There is already prebuilt cache for all steam apps, in order to use it,
-simply clone [steam-webapi-cache](https://github.com/bohdaq/steam-webapi-cache)
-into the root folder of your project.
-
-> $ cd steam-webapi-rust-sdk
-
-> $ git clone git@github.com:bohdaq/steam-webapi-cache.git
-
 ## Demo
 
 App to [retrieve details for all apps](https://github.com/bohdaq/retrieve-all-steam-apps-details-demo-app) 
