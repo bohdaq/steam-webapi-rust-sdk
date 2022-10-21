@@ -3,7 +3,7 @@ use serde::Serialize;
 use serde::Deserialize;
 use serde_json::Value;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
-use crate::{convert_32bit_account_id_to_64bit, get_host, get_scheme, idota2match_570, make_api_call};
+use crate::{get_host, get_scheme, idota2match_570, make_api_call};
 use crate::util::{get_steam_web_api_key};
 
 #[cfg(test)]
@@ -160,7 +160,7 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
 
     let mut result = json["result".to_string()].take();
     let status = result["status".to_string()].take().as_i64().unwrap();
-    if status == MATCH_HISTORY_IS_NOT_ALLOWED_BY_USER_PREFERENCES {
+    if status as u8 == MATCH_HISTORY_IS_NOT_ALLOWED_BY_USER_PREFERENCES {
         return Err("Cannot get match history for a user that hasn't allowed it".to_string())
     }
     let num_results = result["num_results".to_string()].take().as_i64().unwrap();

@@ -2,7 +2,6 @@ use std::fs::read_to_string;
 use url_build_parse::parse_url;
 use crate::{get_host, get_scheme};
 use crate::idota2match_570::get_match_history::{GAME_MODE, get_api_url, parse_response, PLAYER_SKILL};
-use crate::store_steampowered_com::appdetails::parse_api_call_result;
 use crate::util::get_steam_web_api_key;
 
 #[test]
