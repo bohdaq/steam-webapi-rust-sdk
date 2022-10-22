@@ -237,7 +237,7 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
         if players_clone.as_array().is_none() {
             return Err("response does not contain players!".to_string())
         }
-        let mut players  = players_clone.as_array().unwrap();
+        let players  = players_clone.as_array().unwrap();
 
 
         let mut match_history = MatchHistory{
