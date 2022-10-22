@@ -163,11 +163,30 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
     if status as u8 == MATCH_HISTORY_IS_NOT_ALLOWED_BY_USER_PREFERENCES {
         return Err("Cannot get match history for a user that hasn't allowed it".to_string())
     }
-    let num_results = result["num_results".to_string()].take().as_i64().unwrap();
-    let total_results = result["total_results".to_string()].take().as_i64().unwrap();
-    let results_remaining = result["results_remaining".to_string()].take().as_i64().unwrap();
-    let matches = result["matches"].take();
-    let matches = matches.as_array().unwrap();
+
+    let num_results_clone = result["num_results".to_string()].clone();
+    let mut num_results = 0;
+    if num_results_clone.as_i64().is_some() {
+        num_results = num_results_clone.as_i64().unwrap();
+    }
+
+    let total_results_clone = result["total_results".to_string()].clone();
+    let mut total_results = 0;
+    if total_results_clone.as_i64().is_some() {
+        total_results = total_results_clone.as_i64().unwrap();
+    }
+
+    let results_remaining_clone = result["results_remaining".to_string()].clone();
+    let mut results_remaining = 0;
+    if results_remaining_clone.as_i64().is_some() {
+        results_remaining = results_remaining_clone.as_i64().unwrap();
+    }
+
+    let matches_clone = result["matches".to_string()].clone();
+    if matches_clone.as_array().is_none() {
+        return Err("response does not contain any matches!".to_string())
+    }
+    let matches = result["matches".to_string()].as_array().unwrap();
 
     let mut match_history_result = ResponseMatchHistory {
         status,
