@@ -1,8 +1,10 @@
 // curl https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1\?match_id\=1461414523\&key\=1F2709FC907F0DEE1D1EB4787E06B695
 
 use std::collections::HashMap;
+use serde_json::Value;
 use url_build_parse::{build_url, UrlAuthority, UrlComponents};
-use crate::{get_host, get_scheme, idota2match_570};
+use crate::{get_host, get_scheme, idota2match_570, ResponseMatchHistory};
+use crate::idota2match_570::get_match_history::{MatchHistory, Participant};
 use crate::util::get_steam_web_api_key;
 
 pub struct MatchResult {
@@ -28,6 +30,7 @@ pub struct MatchResult {
     pub engine: u64,
     pub radiant_score: u64,
     pub dire_score: u64,
+    pub players: Vec<PlayerStats>,
 }
 
 pub struct PlayerStats {
@@ -82,9 +85,7 @@ pub fn get_api_url(match_id: u64) -> String {
 
     let mut params_map = HashMap::new();
 
-    if match_id.is_some() {
-        params_map.insert("match_id".to_string(), match_id.to_string());
-    }
+    params_map.insert("match_id".to_string(), match_id.to_string());
 
     params_map.insert("key".to_string(), get_steam_web_api_key());
 
@@ -102,4 +103,42 @@ pub fn get_api_url(match_id: u64) -> String {
 
     let url = build_url(url_builder).unwrap();
     url
+}
+
+pub fn parse_response(response: String) -> Result<MatchResult, String> {
+    let match_result = MatchResult{
+        radiant_win: false,
+        duration: 0,
+        pre_game_duration: 0,
+        start_time: 0,
+        match_id: 0,
+        match_seq_num: 0,
+        tower_status_radiant: 0,
+        tower_status_dire: 0,
+        barracks_status_radiant: 0,
+        barracks_status_dire: 0,
+        cluster: 0,
+        first_blood_time: 0,
+        lobby_type: 0,
+        human_players: 0,
+        leagueid: 0,
+        positive_votes: 0,
+        negative_votes: 0,
+        game_mode: 0,
+        flags: 0,
+        engine: 0,
+        radiant_score: 0,
+        dire_score: 0,
+        players: vec![]
+    };
+
+    let boxed_initial_parse = serde_json::from_str(&response);
+    if boxed_initial_parse.is_err() {
+        return Err(boxed_initial_parse.err().unwrap().to_string());
+    }
+    let mut json: Value = boxed_initial_parse.unwrap();
+
+    let mut result = json["result".to_string()].take();
+    Ok(match_result)
+
 }
