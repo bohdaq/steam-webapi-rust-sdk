@@ -1,6 +1,7 @@
 use crate::idota2match_570::get_match_history::ResponseMatchHistory;
 
 pub mod get_match_history;
+pub mod get_match_details;
 
 pub fn get_interface() -> String {
     "IDOTA2Match_570".to_string()

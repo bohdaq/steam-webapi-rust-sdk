@@ -10,7 +10,6 @@ use crate::util::{get_steam_web_api_key};
 mod tests;
 
 // curl https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1\?match_id\=664465007\&key\=1F2709FC907F0DEE1D1EB4787E06B695
-// curl https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1\?match_id\=1461414523\&key\=1F2709FC907F0DEE1D1EB4787E06B695
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Clone, Debug)]
 pub struct ResponseMatchHistory {
