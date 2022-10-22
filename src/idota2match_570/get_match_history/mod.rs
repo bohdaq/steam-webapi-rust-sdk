@@ -179,19 +179,46 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
 
     for match_result in matches {
         let match_id_clone = match_result["match_id"].clone();
-        let match_id = match_id_clone.as_i64().unwrap();
+        let mut match_id = 0;
+        if match_id_clone.as_i64().is_some() {
+            match_id = match_id_clone.as_i64().unwrap();
+        }
+
         let match_seq_num_clone = match_result["match_seq_num"].clone();
-        let match_seq_num = match_seq_num_clone.as_i64().unwrap();
+        let mut match_seq_num = 0;
+        if match_seq_num_clone.as_i64().is_some() {
+            match_seq_num = match_seq_num_clone.as_i64().unwrap();
+        }
+
         let start_time_clone = match_result["start_time"].clone();
-        let start_time = start_time_clone.as_i64().unwrap();
+        let mut start_time = 0;
+        if start_time_clone.as_i64().is_some() {
+            start_time = start_time_clone.as_i64().unwrap();
+        }
+
         let lobby_type_clone = match_result["lobby_type"].clone();
-        let lobby_type = lobby_type_clone.as_i64().unwrap();
+        let mut lobby_type = 0;
+        if lobby_type_clone.as_i64().is_some() {
+            lobby_type = lobby_type_clone.as_i64().unwrap();
+        }
+
         let radiant_team_id_clone = match_result["radiant_team_id"].clone();
-        let radiant_team_id = radiant_team_id_clone.as_i64().unwrap();
+        let mut radiant_team_id = 0;
+        if radiant_team_id_clone.as_i64().is_some() {
+            radiant_team_id = radiant_team_id_clone.as_i64().unwrap();
+        }
+
         let dire_team_id_clone = match_result["dire_team_id"].clone();
-        let dire_team_id = dire_team_id_clone.as_i64().unwrap();
+        let mut dire_team_id = 0;
+        if dire_team_id_clone.as_i64().is_some() {
+            dire_team_id = dire_team_id_clone.as_i64().unwrap();
+        }
+
         let players_clone = match_result["players"].clone();
-        let players = players_clone.as_array().unwrap();
+        if players_clone.as_array().is_none() {
+            return Err("response does not contain players!".to_string())
+        }
+        let mut players  = players_clone.as_array().unwrap();
 
 
         let mut match_history = MatchHistory{
