@@ -8,9 +8,10 @@ responses to the 'steam-webapi-cache' folder.
 
 
 ## Features
-1. Ability to get list of apps available on the Steam.
-2. Ability to get detailed app description from Steam.
-3. Local cache of the app details.
+1. Ability to get list of apps available on the Steam
+1. Ability to get detailed app description from Steam
+1. Ability to retrieve list of Dota2 matches
+1. Local cache of the app details
 
 
 ## Configuration
