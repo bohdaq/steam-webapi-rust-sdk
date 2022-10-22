@@ -1,5 +1,10 @@
 // curl https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v1\?match_id\=1461414523\&key\=1F2709FC907F0DEE1D1EB4787E06B695
 
+use std::collections::HashMap;
+use url_build_parse::{build_url, UrlAuthority, UrlComponents};
+use crate::{get_host, get_scheme, idota2match_570};
+use crate::util::get_steam_web_api_key;
+
 pub struct MatchResult {
     pub radiant_win: bool,
     pub duration: u64,
@@ -53,4 +58,48 @@ pub struct PlayerStats {
     pub net_worth: u64,
     pub aghanims_scepter: u64,
     pub aghanims_shard: u64,
+}
+
+pub fn get_method_name() -> String {
+    "GetMatchDetails".to_string()
+}
+
+pub fn get_version() -> String {
+    "v1".to_string()
+}
+
+pub fn get_api_url(match_id: u64) -> String {
+    let  interface = idota2match_570::get_interface();
+    let  method = get_method_name();
+    let  version = get_version();
+
+    let path = [
+        "/".to_string(),
+        interface, "/".to_string(),
+        method, "/".to_string(),
+        version
+    ].join("");
+
+    let mut params_map = HashMap::new();
+
+    if match_id.is_some() {
+        params_map.insert("match_id".to_string(), match_id.to_string());
+    }
+
+    params_map.insert("key".to_string(), get_steam_web_api_key());
+
+    let url_builder = UrlComponents{
+        scheme: get_scheme(),
+        authority: Some(UrlAuthority{
+            user_info: None,
+            host: get_host(),
+            port: None
+        }),
+        path,
+        query: Some(params_map),
+        fragment: None
+    };
+
+    let url = build_url(url_builder).unwrap();
+    url
 }
