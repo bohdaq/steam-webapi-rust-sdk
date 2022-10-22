@@ -52,7 +52,7 @@ pub fn get(account_id: Option<i64>,
            game_mode: Option<u8>,
            skill: Option<u8>,
            min_players: Option<u32>,
-           start_at_match_id: Option<u64>,
+           start_at_match_id: Option<i64>,
            matches_requested: Option<u32>,
            tournament_games_only: Option<bool>)
     -> Result<ResponseMatchHistory, String> {
@@ -84,7 +84,7 @@ pub fn get_api_url(account_id: Option<i64>,
                              game_mode: Option<u8>,
                              skill: Option<u8>,
                              min_players: Option<u32>,
-                             start_at_match_id: Option<u64>,
+                             start_at_match_id: Option<i64>,
                              matches_requested: Option<u32>,
                              tournament_games_only: Option<bool>) -> String {
 
