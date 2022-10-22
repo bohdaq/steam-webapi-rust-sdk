@@ -1,6 +1,6 @@
 [package]
 name = "steam-webapi-rust-sdk"
-version = "0.0.4"
+version = "0.0.5"
 homepage = "https://github.com/bohdaq/steam-webapi-rust-sdk"
 repository = "https://github.com/bohdaq/steam-webapi-rust-sdk"
 readme = "README.md"
