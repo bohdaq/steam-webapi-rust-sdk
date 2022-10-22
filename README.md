@@ -29,6 +29,7 @@ available on Steam store.
 
 App to [list all properties in app details response API](https://github.com/bohdaq/list-steam-appdetails-properties) on Steam store.
 
+App shows how to use steam-webapi-rust-sdk to [retrieve list of Dota2 matches](https://github.com/bohdaq/dota2-match-history-demo-app)
 ## Documentation
 Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.4/steam_webapi_rust_sdk/).
 
