@@ -325,29 +325,29 @@ pub const GAME_MODE: GameMode = GameMode{
 };
 
 pub struct GameMode {
-    none: u8,
-    all_pick: u8,
-    captains_mode: u8,
-    random_draft: u8,
-    single_draft: u8,
-    all_random: u8,
-    intro: u8,
-    diretide: u8,
-    reverse_captains_mode: u8,
-    the_greeviling: u8,
-    tutorial: u8,
-    mid_only: u8,
-    least_played: u8,
-    new_player_pool: u8,
-    compendium_matchmaking: u8,
-    captains_draft: u8,
+    pub none: u8,
+    pub all_pick: u8,
+    pub captains_mode: u8,
+    pub random_draft: u8,
+    pub single_draft: u8,
+    pub all_random: u8,
+    pub intro: u8,
+    pub diretide: u8,
+    pub reverse_captains_mode: u8,
+    pub the_greeviling: u8,
+    pub tutorial: u8,
+    pub mid_only: u8,
+    pub least_played: u8,
+    pub new_player_pool: u8,
+    pub compendium_matchmaking: u8,
+    pub captains_draft: u8,
 }
 
 pub struct Skill {
-    any: u8,
-    normal: u8,
-    high: u8,
-    very_high: u8,
+    pub any: u8,
+    pub normal: u8,
+    pub high: u8,
+    pub very_high: u8,
 }
 
 pub const PLAYER_SKILL : Skill = Skill {
@@ -358,16 +358,16 @@ pub const PLAYER_SKILL : Skill = Skill {
 };
 
 pub struct LobbyType {
-    invalid: i8,
-    public_matchmaking: u8,
-    practise: u8,
-    tournament: u8,
-    tutorial: u8,
-    co_op_with_bots: u8,
-    team_match: u8,
-    solo_queue: u8,
-    ranked_matchmaking: u8,
-    one_vs_one_solo_mid: u8,
+    pub invalid: i8,
+    pub public_matchmaking: u8,
+    pub practise: u8,
+    pub tournament: u8,
+    pub tutorial: u8,
+    pub co_op_with_bots: u8,
+    pub team_match: u8,
+    pub solo_queue: u8,
+    pub ranked_matchmaking: u8,
+    pub one_vs_one_solo_mid: u8,
 }
 
 pub const LOBBY_TYPE: LobbyType = LobbyType {
