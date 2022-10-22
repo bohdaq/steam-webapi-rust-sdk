@@ -207,15 +207,36 @@ pub fn parse_response(response: String) -> Result<ResponseMatchHistory, String> 
 
         for player_result in players {
             let account_id_clone = player_result["account_id"].clone();
-            let account_id = account_id_clone.as_i64().unwrap();
+            let mut account_id = 0;
+            if account_id_clone.as_i64().is_some() {
+                account_id = account_id_clone.as_i64().unwrap();
+            }
+
             let player_slot_clone = player_result["player_slot"].clone();
-            let player_slot = player_slot_clone.as_i64().unwrap();
+            let mut player_slot = 0;
+            if player_slot_clone.as_i64().is_some() {
+                player_slot = player_slot_clone.as_i64().unwrap();
+            }
+
             let team_number_clone = player_result["team_number"].clone();
-            let team_number = team_number_clone.as_i64().unwrap();
+            let mut team_number = 0;
+            if team_number_clone.as_i64().is_some() {
+                team_number = team_number_clone.as_i64().unwrap();
+            }
+
             let team_slot_clone = player_result["team_slot"].clone();
-            let team_slot_i64 = team_slot_clone.as_i64().unwrap();
+            let mut team_slot_i64 = 0;
+            if team_slot_clone.as_i64().is_some() {
+                team_slot_i64 = team_slot_clone.as_i64().unwrap();
+            }
+
             let hero_id_clone = player_result["hero_id"].clone();
-            let hero_id = hero_id_clone.as_i64().unwrap();
+            let mut hero_id = 0;
+            if hero_id_clone.as_i64().is_some() {
+                hero_id = hero_id_clone.as_i64().unwrap();
+            }
+
+
 
             let team_slot : u8 = team_slot_i64 as u8;
 
