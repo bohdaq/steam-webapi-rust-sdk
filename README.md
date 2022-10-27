@@ -7,7 +7,7 @@ The library itself tries to minimize number of networks calls through the cachin
 responses to the 'steam-webapi-cache' folder.
 
 There is already prebuilt cache for all steam apps, in order to use it,
-simply download and extract [steam-webapi-cache](https://drive.google.com/file/d/1uFWSkeGXU02YBPIQ18Fq2Pdnml3Yas7N/view?usp=sharing)
+simply download and extract [steam-webapi-cache](https://drive.google.com/drive/folders/1lpx0Bwzhc3ABEQp80lV1XiwOzONY9OYl?usp=sharing)
 into the root folder of your project. You can check integrity of the package by provided sha256 checksum.
 
 
