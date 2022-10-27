@@ -6,6 +6,10 @@ In order to use this library make sure to set STEAM_WEB_API_KEY system environme
 The library itself tries to minimize number of networks calls through the caching relevant 
 responses to the 'steam-webapi-cache' folder.
 
+There is already prebuilt cache for all steam apps, in order to use it,
+simply download and extract [steam-webapi-cache](https://drive.google.com/file/d/1uFWSkeGXU02YBPIQ18Fq2Pdnml3Yas7N/view?usp=sharing)
+into the root folder of your project. You can check integrity of the package by provided sha256 checksum.
+
 
 ## Features
 1. Ability to get list of apps available on the Steam
