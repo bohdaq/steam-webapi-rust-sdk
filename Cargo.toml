@@ -1,12 +1,12 @@
 [package]
 name = "steam-webapi-rust-sdk"
-version = "0.0.7"
+version = "0.0.8"
 homepage = "https://github.com/bohdaq/steam-webapi-rust-sdk"
 repository = "https://github.com/bohdaq/steam-webapi-rust-sdk"
 readme = "README.md"
 description = "Set of utility functions to access Steam Web API"
 edition = "2021"
-rust-version = "1.64"
+rust-version = "1.65"
 authors = ["Bohdan Tsap <bohdan.tsap@tutanota.com>"]
 keywords = ["steam", "api", "gamedev"]
 categories = ["api-bindings", "caching", "game-development", "web-programming"]
