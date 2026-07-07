@@ -1,59 +1,127 @@
-# Welcome to steam-webapi-rust-sdk!
-Hi, `steam-webapi-rust-sdk` is a set of utility functions to access Steam Web API.
+# steam-webapi-rust-sdk
 
-In order to use this library make sure to set STEAM_WEB_API_KEY system environment variable.
+[![Crates.io](https://img.shields.io/crates/v/steam-webapi-rust-sdk.svg)](https://crates.io/crates/steam-webapi-rust-sdk)
+[![docs.rs](https://img.shields.io/docsrs/steam-webapi-rust-sdk)](https://docs.rs/steam-webapi-rust-sdk/latest/steam_webapi_rust_sdk/)
+[![License: MIT](https://img.shields.io/crates/l/steam-webapi-rust-sdk.svg)](LICENSE)
 
-The library itself tries to minimize number of networks calls through the caching relevant 
-responses to the 'steam-webapi-cache' folder.
-
-There is already prebuilt cache for all steam apps, in order to use it,
-simply download and extract [steam-webapi-cache](https://drive.google.com/drive/folders/1lpx0Bwzhc3ABEQp80lV1XiwOzONY9OYl?usp=sharing)
-into the root folder of your project. You can check integrity of the package by provided sha256 checksum.
-
+A Rust SDK for the [Steam Web API](https://steamcommunity.com/dev). It provides typed access to Steam
+player, app, and Dota 2 data, with local response caching to keep you within Steam's rate limits.
 
 ## Features
-1. Ability to get list of apps available on the Steam
-1. Ability to get detailed app description from Steam
-1. Ability to retrieve list of Dota2 matches
-1. Local cache of the app details
 
+- **App catalog** — list every app available on Steam (`ISteamApps/GetAppList`).
+- **Store details** — retrieve detailed app metadata from the Steam store.
+- **Player profiles** — profile summaries, friend lists, ban status, and vanity URL resolution via
+  `ISteamUser`.
+- **Owned games & activity** — owned games, recently played games, Steam level, and badges via
+  `IPlayerService`.
+- **Stats & achievements** — player achievements, game stats, stat/achievement schemas, global
+  achievement percentages, and live player counts via `ISteamUserStats`.
+- **App news** — news items for an app via `ISteamNews`.
+- **Dota 2 data** — match history and details, heroes, league listings, live league games, and team
+  info via `IDOTA2Match_570`.
+- **Response caching** — API responses are cached locally under `steam-webapi-cache/`, minimizing
+  redundant network calls.
+- **Prebuilt cache** — a ready-made cache of app details is available for download so you don't have
+  to fetch every app individually.
+- **SteamID helpers** — convert account IDs between 32-bit and 64-bit representations.
+
+## Installation
+
+```
+cargo add steam-webapi-rust-sdk
+```
+
+or add it to your `Cargo.toml`:
+
+```toml
+[dependencies]
+steam-webapi-rust-sdk = "0.0.9"
+```
 
 ## Configuration
-In order to use this library make sure to set STEAM_WEB_API_KEY system environment variable.
 
-> $ vim ~/.bash_profile 
+The SDK needs a Steam Web API key. Grab one from the
+[Steam API key registration page](https://steamcommunity.com/dev/apikey), then export it as an
+environment variable:
 
-> export STEAM_WEBAPI_KEY="YOUR_STEAM_WEBAPI_KEY"
+```
+export STEAM_WEBAPI_KEY="YOUR_STEAM_WEBAPI_KEY"
+```
 
-> $ source  ~/.bash_profile
+Add that line to your shell profile (`~/.bash_profile`, `~/.zshrc`, etc.) and reload it with
+`source ~/.bash_profile` so it's available whenever you run your project.
 
-## Demo
+## Usage
 
-App to [retrieve details for all apps](https://github.com/bohdaq/retrieve-all-steam-apps-details-demo-app) 
-available on Steam store.
+```rust
+// List every app available on Steam
+let app_list = steam_webapi_rust_sdk::get_app_list()?;
 
-App to [list all properties in app details response API](https://github.com/bohdaq/list-steam-appdetails-properties) on Steam store.
+// Get store details for a given app id
+let app_details = steam_webapi_rust_sdk::get_app_details(570)?;
 
-App shows how to use steam-webapi-rust-sdk to [retrieve list of Dota2 matches](https://github.com/bohdaq/dota2-match-history-demo-app)
+// Query Dota 2 match history for an account
+let match_history = steam_webapi_rust_sdk::get_dota2_match_history(
+    Some(76561197960361544), // account_id
+    None,                    // game_mode
+    None,                    // skill
+    None,                    // min_players
+    None,                    // start_at_match_id
+    None,                    // matches_requested
+    None,                    // tournament_games_only
+)?;
+
+// Look up a player's profile summary
+let summaries = steam_webapi_rust_sdk::get_player_summaries(vec![76561197960361544])?;
+
+// Check the current number of players in-game (no API key required)
+let player_count = steam_webapi_rust_sdk::get_number_of_current_players(570)?;
+
+// Convert a 32-bit SteamID to its 64-bit form
+let account_id_64 = steam_webapi_rust_sdk::convert_32bit_account_id_to_64bit(95816);
+```
+
+## Caching
+
+Responses are written to a `steam-webapi-cache/` folder in your project root, and cached variants
+(`get_cached_app_list`, `get_cached_app_details`) read from it first before falling back to the network.
+
+To skip the initial download entirely, grab the prebuilt cache of all Steam app details from
+[Google Drive](https://drive.google.com/drive/folders/1lpx0Bwzhc3ABEQp80lV1XiwOzONY9OYl?usp=sharing)
+and extract it into your project root. A SHA-256 checksum is included so you can verify its integrity.
+
+## Demo Applications
+
+- [Retrieve details for all Steam apps](https://github.com/bohdaq/retrieve-all-steam-apps-details-demo-app)
+- [List all properties in the app details API response](https://github.com/bohdaq/list-steam-appdetails-properties)
+- [Retrieve Dota 2 match history](https://github.com/bohdaq/dota2-match-history-demo-app)
+
 ## Documentation
-Public functions definitions and usage can be found at [cargo docs](https://docs.rs/steam-webapi-rust-sdk/0.0.4/steam_webapi_rust_sdk/).
 
+Full API reference is available on [docs.rs](https://docs.rs/steam-webapi-rust-sdk/latest/steam_webapi_rust_sdk/).
 
 ## Build
-If you want to build steam-webapi-rust-sdk on your own, make sure you have [Rust installed](https://www.rust-lang.org/tools/install).
 
-> $ cargo build 
- 
+Requires [Rust](https://www.rust-lang.org/tools/install).
+
+```
+cargo build
+```
 
 ## Test
-If you want to test steam-webapi-rust-sdk. You need to be connected to the internet as some of the tests invoke Steam API.
 
-> $ cargo test
+Some tests call the live Steam API, so you'll need an internet connection and a valid
+`STEAM_WEBAPI_KEY` set.
 
+```
+cargo test
+```
 
-## Community
-Contact me on [Discord](https://discordapp.com/users/952173191659393025/) where you can ask questions and share ideas. Follow the [Rust code of conduct](https://www.rust-lang.org/policies/code-of-conduct).
+## Contributing
 
-## Donations
-If you appreciate my work and want to support it, feel free to do it via [PayPal](https://www.paypal.com/donate/?hosted_button_id=7J69SYZWSP6HJ).
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the process.
 
+## License
+
+Licensed under the [MIT License](LICENSE).

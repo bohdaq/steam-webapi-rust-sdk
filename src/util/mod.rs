@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::env;
 use std::time::{SystemTime, UNIX_EPOCH};
+use serde_json::Value;
+use url_build_parse::{build_url, UrlAuthority, UrlComponents};
 
 pub fn get_steam_web_api_key() -> String {
     let boxed_steam_web_api_key = env::var("STEAM_WEBAPI_KEY");
@@ -41,4 +43,48 @@ pub fn as_unix_timestamp(system_time: SystemTime) -> u64 {
 
 pub fn get_json_filetype() -> String {
     "json".to_string()
+}
+
+/// Builds a `https://api.steampowered.com/<interface>/<method>/<version>?<params>` URL.
+pub fn build_steam_api_url(interface: &str, method: &str, version: &str, params_map: HashMap<String, String>) -> String {
+    let path = ["/".to_string(), interface.to_string(), "/".to_string(), method.to_string(), "/".to_string(), version.to_string()].join("");
+
+    let url_builder = UrlComponents {
+        scheme: "https".to_string(),
+        authority: Some(UrlAuthority {
+            user_info: None,
+            host: "api.steampowered.com".to_string(),
+            port: None
+        }),
+        path,
+        query: Some(params_map),
+        fragment: None
+    };
+
+    build_url(url_builder).unwrap()
+}
+
+/// Reads an unsigned integer field from a JSON object, defaulting to 0 if absent or the wrong type.
+pub fn json_u64(value: &Value, key: &str) -> u64 {
+    value.get(key).and_then(Value::as_u64).unwrap_or(0)
+}
+
+/// Reads a signed integer field from a JSON object, defaulting to 0 if absent or the wrong type.
+pub fn json_i64(value: &Value, key: &str) -> i64 {
+    value.get(key).and_then(Value::as_i64).unwrap_or(0)
+}
+
+/// Reads a floating point field from a JSON object, defaulting to 0.0 if absent or the wrong type.
+pub fn json_f64(value: &Value, key: &str) -> f64 {
+    value.get(key).and_then(Value::as_f64).unwrap_or(0.0)
+}
+
+/// Reads a string field from a JSON object, defaulting to an empty string if absent or the wrong type.
+pub fn json_str(value: &Value, key: &str) -> String {
+    value.get(key).and_then(Value::as_str).unwrap_or("").to_string()
+}
+
+/// Reads a boolean field from a JSON object, defaulting to false if absent or the wrong type.
+pub fn json_bool(value: &Value, key: &str) -> bool {
+    value.get(key).and_then(Value::as_bool).unwrap_or(false)
 }
